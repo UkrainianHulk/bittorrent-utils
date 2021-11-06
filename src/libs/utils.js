@@ -1,4 +1,5 @@
 const process = require('process')
+const log = require('./log.js')
 
 module.exports.isProduction = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'container'
 module.exports.numberToPercent = (number) => (number > 0 ? number > 100 ? 100 : number : 0) / 100
@@ -15,11 +16,11 @@ module.exports.iteration = async function (func, delay, ...args) {
     if (!module.exports.isProduction) try {
         return await func(...args)
     } catch (error) {
-        module.exports.log.error(error.stack, func.name)
+        log.error(error.stack, func.name)
     } else try {
         await func(...args)
     } catch (error) {
-        module.exports.log.error(error.stack, func.name)
+        log.error(error.stack, func.name)
     } finally {
         await new Promise(resolve => setTimeout(resolve, delay))
         return await module.exports.iteration(func, delay, ...args)

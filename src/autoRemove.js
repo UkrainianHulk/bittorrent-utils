@@ -50,26 +50,18 @@ const sortTorrents = (list) => list.map(item => {
     return {...item, started, seedingDurationDays, uploadRatio, seedsRatio, coefficient}
 }).sort((a, b) => b.coefficient - a.coefficient)
 
-const autoRemove = async (client, clientIndex) => {
-    const list = await client.getList()
+const removeBySpace = async (list, client, clientIndex) => {
     const listsPerDrive = getListsPerDrive(list)
+    const removalList = []
+
     for (let drive in listsPerDrive) {
         const listOnDrive = listsPerDrive[drive]
         const totalSize = listOnDrive.totalSize
+
         if (totalSize > client.quota) {
             const exccess = totalSize - client.quota
             const sortedList = sortTorrents(listOnDrive.torrents)
             const torrentsToRemove = []
-
-            // console.table(sortedList.map(item => ({
-            //     name: item.name,
-            //     status: item.status,
-            //     started: item.started,
-            //     seedingDurationDays: item.seedingDurationDays,
-            //     uploadRatio: item.uploadRatio,
-            //     seedsRatio: item.seedsRatio,
-            //     coefficient: item.coefficient
-            // })))
             
             do {
                 if (sortedList.length === 0) {
@@ -81,22 +73,52 @@ const autoRemove = async (client, clientIndex) => {
                 torrentsToRemove.push(torrent)
             } while (torrentsToRemove.reduce((acc, torrent) => acc += torrent.size, 0) < exccess)
             
-            log.info(`Client #${clientIndex}, ${drive} - ${bytesToGB(totalSize).toFixed(2)}/${bytesToGB(client.quota).toFixed(2)}GB, exccess ${bytesToGB(exccess).toFixed(2)}GB, torrents to remove:`)
-            
-            console.table(torrentsToRemove.map(t => ({name: t.name,
-                drive: drive,
-                size: bytesToGB(t.size).toFixed(2) + ' GB',
-                ratio: t.ratio / 1000,
-                seedsRatio: t.seedsRatio,
-                coefficient: t.coefficient,
-                added: new Date(t.added * 1000).toLocaleString()
-            })))
-            
-            if (!config.get('AUTOREMOVE_PREVENT_REMOVING')) await client.deleteTorrents(torrentsToRemove.map(t => t.hash))
+            removalList.push(...torrentsToRemove)
+
+            log.info(`Client #${clientIndex}, ${drive} - ${bytesToGB(totalSize).toFixed(2)}/${bytesToGB(client.quota).toFixed(2)}GB, exccess ${bytesToGB(exccess).toFixed(2)}GB`)
         } else {
             log.debug(`Client #${clientIndex}, drive ${drive} - ${bytesToGB(totalSize).toFixed(2)}/${bytesToGB(client.quota).toFixed(2)}GB`)
         }
     }
+
+    return removalList
+}
+
+const removeByAmount = async (list, client, clientIndex) => {
+    const maxAmount = config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')
+    const removalList = []
+
+    if (list.length > maxAmount) {
+        const exccess = list.length - maxAmount
+        const sortedList = sortTorrents(list)
+        log.info(`Client #${clientIndex}, torrents amount exccess - ${exccess}`)
+        removalList.push(...sortedList.slice(maxAmount, list.length))
+    }
+
+    return removalList
+}
+
+const autoRemove = async (client, clientIndex) => {
+    const list = await client.getList()
+    const removalList = []
+
+    if (config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')) removalList.push(...(await removeByAmount(list, client, clientIndex)))
+    if (config.get('AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB')) removalList.push(...(await removeBySpace(list, client, clientIndex)))
+
+    const uniqueRemovalHashList = [...new Set(removalList.map(item => item.hash))]
+    const uniqueRemovalList = uniqueRemovalHashList.map(hash => removalList.find(item => item.hash === hash))
+
+    console.table(uniqueRemovalList.map(t => ({
+        name: t.name,
+        // drive: drive,
+        // size: bytesToGB(t.size).toFixed(2) + ' GB',
+        // ratio: t.ratio / 1000,
+        // seedsRatio: t.seedsRatio,
+        coefficient: t.coefficient,
+        // added: new Date(t.added * 1000).toLocaleString()
+    })))
+
+    if (!config.get('AUTOREMOVE_PREVENT_REMOVING')) await client.deleteTorrents(uniqueRemovalHashList)
 }
 
 const autoRemoveIteration = (...args) => iteration(autoRemove, config.get('AUTOREMOVE_INTERVAL_SECONDS') * 1000, ...args)
