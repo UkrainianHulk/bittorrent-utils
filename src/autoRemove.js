@@ -105,20 +105,22 @@ const autoRemove = async (client, clientIndex) => {
     if (config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')) removalList.push(...(await removeByAmount(list, client, clientIndex)))
     if (config.get('AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB')) removalList.push(...(await removeBySpace(list, client, clientIndex)))
 
-    const uniqueRemovalHashList = [...new Set(removalList.map(item => item.hash))]
-    const uniqueRemovalList = uniqueRemovalHashList.map(hash => removalList.find(item => item.hash === hash))
-
-    console.table(uniqueRemovalList.map(t => ({
-        name: t.name,
-        // drive: drive,
-        // size: bytesToGB(t.size).toFixed(2) + ' GB',
-        // ratio: t.ratio / 1000,
-        // seedsRatio: t.seedsRatio,
-        coefficient: t.coefficient,
-        // added: new Date(t.added * 1000).toLocaleString()
-    })))
-
-    if (!config.get('AUTOREMOVE_PREVENT_REMOVING')) await client.deleteTorrents(uniqueRemovalHashList)
+    if (removalList.length > 0) {
+        const uniqueRemovalHashList = [...new Set(removalList.map(item => item.hash))]
+        const uniqueRemovalList = uniqueRemovalHashList.map(hash => removalList.find(item => item.hash === hash))
+    
+        console.table(uniqueRemovalList.map(t => ({
+            name: t.name,
+            // drive: drive,
+            // size: bytesToGB(t.size).toFixed(2) + ' GB',
+            // ratio: t.ratio / 1000,
+            // seedsRatio: t.seedsRatio,
+            coefficient: t.coefficient,
+            // added: new Date(t.added * 1000).toLocaleString()
+        })))
+    
+        if (!config.get('AUTOREMOVE_PREVENT_REMOVING')) await client.deleteTorrents(uniqueRemovalHashList)
+    }
 }
 
 const autoRemoveIteration = (...args) => iteration(autoRemove, config.get('AUTOREMOVE_INTERVAL_SECONDS') * 1000, ...args)
