@@ -16,7 +16,7 @@ module.exports = {
         PASSWORD: 'yourpassword'
     }],
 
-    PEERS_FILTER_INTERVAL_SECONDS: 3,
+    PEERS_FILTER_INTERVAL_SECONDS: 0,
     PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
     PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
     PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.2',
@@ -24,12 +24,12 @@ module.exports = {
 
     AUTOREMOVE_INTERVAL_SECONDS: 0,
     AUTOREMOVE_TORRENTS_MAX_AMOUNT: 30,
-    AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB: 64,
+    AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB: 0,
     AUTOREMOVE_PREVENT_REMOVING: false,
 
     AUTOCONFIG_ENABLE: false,
     AUTOCONFIG_SETTINGS: {
-        max_active_torrent: 15,
+        max_active_torrent: 30,
         max_active_downloads: 3,
         conns_globally: 200,
         conns_per_torrent: 50,
