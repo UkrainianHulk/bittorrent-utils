@@ -1,6 +1,9 @@
 module.exports = {
     AUTOTRANSFER_INTERVAL_SECONDS: 1,
-    AUTOTRANSFER_FROM: 'auto',
+    AUTOTRANSFER_FROM: [
+        "865b2084abd1909b1a1edc836da8edc64f74239a34d04bc2b6ef94c2016a8c45",
+        "ad861e2b1876c7071fec870e02e6b1527d443fd45d05aceeb64e4236b7a1b7eb"
+    ],
     AUTOTRANSFER_TO: "BFHYIrLExXfnWwdPCD827n6n/dhcU6d1TjL0xmbSb0977to4Zx5YOQ9vqkYxqTsQzjgZf2Pfltgt4Kt4cjmaeT0=",
     AUTOTRANSFER_HISTORY_AGE_HOURS: 24,
 
@@ -31,13 +34,13 @@ module.exports = {
     AUTOCONFIG_SETTINGS: {
         max_active_torrent: 30,
         max_active_downloads: 3,
-        conns_globally: 200,
-        conns_per_torrent: 50,
+        conns_globally: 30000,
+        conns_per_torrent: 1000,
         ul_slots_per_torrent: 1,
         encryption_mode: 1,
         seed_ratio: 0,
-        max_dl_rate: 0,
-        max_ul_rate: 0,
+        max_dl_rate: 16384,
+        max_ul_rate: 2048,
      // bind_port: 35000,
         rand_port_on_start: true,
         upnp: true,
@@ -46,9 +49,9 @@ module.exports = {
         dir_torrent_files_flag: true,
         dir_torrent_files: 'torrents',
         dir_autoload_flag: true,
-        dir_autoload: 'autoload',
         dir_autoload_delete: true,
-        dir_active_download_flag: false,
+        dir_autoload: 'autoload',
+        dir_active_download_flag: false, 
         dir_active_download: 'downloads',
         'cache.read': true,
         'cache.write': true,
