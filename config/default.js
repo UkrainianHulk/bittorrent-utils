@@ -1,5 +1,9 @@
 module.exports = {
+    // Transfer attempt interval in seconds. Set this to 0 to disable
+    // Интервал между попытками пеевода. Установите 0 чтобы отключить
     AUTOTRANSFER_INTERVAL_SECONDS: 1,
+    // Array of payer's SPEED or BTFS private keys or string 'auto' - makes app to autodetect ip-app private key
+    // Массив приватных ключей (SPEED или BTFS) плательщика или строка 'auto' - автоматическое определение приватного ключа in-app кошелька
     AUTOTRANSFER_FROM: [
         "865b2084abd1909b1a1edc836da8edc64f74239a34d04bc2b6ef94c2016a8c45",
         "ad861e2b1876c7071fec870e02e6b1527d443fd45d05aceeb64e4236b7a1b7eb"
@@ -18,12 +22,6 @@ module.exports = {
         USERNAME: 'yourusername',
         PASSWORD: 'yourpassword'
     }],
-
-    PEERS_FILTER_INTERVAL_SECONDS: 0,
-    PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
-    PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
-    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.2',
-    PEERS_FILTER_BANLIST_MAX_LENGTH: 1000,
 
     AUTOREMOVE_INTERVAL_SECONDS: 0,
     AUTOREMOVE_TORRENTS_MAX_AMOUNT: 30,
@@ -59,6 +57,12 @@ module.exports = {
         'offers.sponsored_torrent_offer_enabled': false,
         'offers.left_rail_offer_enabled': false
     },
+
+    PEERS_FILTER_INTERVAL_SECONDS: 0,
+    PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
+    PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
+    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.2',
+    PEERS_FILTER_BANLIST_MAX_LENGTH: 1000,
 
     DEV_FEE_PERCENT: 1,
     LOG_LEVEL: 2,
