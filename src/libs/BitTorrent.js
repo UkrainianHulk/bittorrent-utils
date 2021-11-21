@@ -95,7 +95,7 @@ module.exports = class {
         else return []
     }
 
-    async stopTorrents(hashes, deleteFiles = true) {
+    async stopTorrents(hashes) {
         const url = new URL(this.guiUrl)
         if (!Array.isArray(hashes)) hashes = [hashes]
         url.searchParams.set('action', 'stop')
@@ -104,8 +104,6 @@ module.exports = class {
     }
 
     async deleteTorrents(hashes, deleteFiles = true) {
-        await this.stopTorrents(hashes)
-
         const url = new URL(this.guiUrl)
         if (!Array.isArray(hashes)) hashes = [hashes]
         if (deleteFiles) url.searchParams.set('action', 'removedata')
