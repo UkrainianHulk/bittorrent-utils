@@ -39,8 +39,10 @@ const filterPeers = async (client, clientIndex) => {
         const version = parseVersion(peer.client)
         const torrentStatus = torrentList.find(torrent => torrent.hash === peer.torrentHash).status
 
+        console.log(peer)
+
         // if torrent status is 'downloading' so dont ban peer that upload to you more then download
-        if (torrentStatus === 201 && peer.uploadSpeed > peer.downloadSpeed) return acc
+        if (torrentStatus === 201 && peer.uploadSpeed < peer.downloadSpeed) return acc
         else if (peer.client.startsWith('μTorrent') && semver.satisfies(version, config.get('PEERS_FILTER_UTORRENT_VERSION'))) return acc
         else if (peer.client.startsWith('BitTorrent') && semver.satisfies(version, config.get('PEERS_FILTER_BITTORRENT_VERSION'))) return acc
         else if (peer.client.startsWith('libtorrent') && semver.satisfies(version, config.get('PEERS_FILTER_LIBTORRENT_VERSION'))) return acc
