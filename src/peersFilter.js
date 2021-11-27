@@ -29,16 +29,25 @@ const getClient = async (credentials, clientIndex) => {
 const filterPeers = async (client, clientIndex) => {
     const torrentList = await client.getList()
     const peerList = await client.getPeers(torrentList.map(torrent => torrent.hash))
+
     const parseVersion = (clientName) => {
         const match = clientName.match(/\d+\.\d+\.\d+/)
         return match ? match[0] : null
     }
+    
     const peersToBan = peerList.reduce((acc, peer) => {
-        if (peer.client.startsWith('μTorrent') && semver.satisfies(parseVersion(peer.client), config.get('PEERS_FILTER_UTORRENT_VERSION'))) return acc
-        else if (peer.client.startsWith('BitTorrent') && semver.satisfies(parseVersion(peer.client), config.get('PEERS_FILTER_BITTORRENT_VERSION'))) return acc
-        else if (peer.client.startsWith('libtorrent') && semver.satisfies(parseVersion(peer.client), config.get('PEERS_FILTER_LIBTORRENT_VERSION'))) return acc
+        const version = parseVersion(peer.client)
+        const torrentStatus = torrentList.find(torrent => torrent.hash === peer.torrentHash).status
+
+        // if torrent status is 'downloading' so dont ban peer that upload to you more then download
+        if (torrentStatus === 201 && peer.uploadSpeed > peer.downloadSpeed) return acc
+        else if (peer.client.startsWith('μTorrent') && semver.satisfies(version, config.get('PEERS_FILTER_UTORRENT_VERSION'))) return acc
+        else if (peer.client.startsWith('BitTorrent') && semver.satisfies(version, config.get('PEERS_FILTER_BITTORRENT_VERSION'))) return acc
+        else if (peer.client.startsWith('libtorrent') && semver.satisfies(version, config.get('PEERS_FILTER_LIBTORRENT_VERSION'))) return acc
         else return [...acc, peer]
+
     }, [])
+
     if (peersToBan.length) {
         try {
             const bannedIps = (fs.readFileSync(client.ipfilterFilePath, 'utf-8')).split('\n').filter(ip => ip !== '')

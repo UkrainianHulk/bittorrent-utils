@@ -84,14 +84,27 @@ module.exports = class {
         if (!Array.isArray(hashes)) hashes = [hashes]
         url.searchParams.set('action', 'getpeers')
         for (let hash of hashes) url.searchParams.append('hash', hash)
+        
         const response = await this.authorizedRequest(url)
-        if (response.peers) return response.peers.filter(item => Array.isArray(item) && item.length).flat().map(peer => ({
-            region: peer[0],
-            ip: peer[1],
-            resolvedIp: peer[2],
-            client: peer[5],
-            flags: peer[6],
-        }))
+        const peerList = response.peers
+
+        if (peerList)
+            return peerList.reduce((acc, item, index, list) => {
+                if (typeof item === 'string') {
+                    const torrentHash = item
+                    const peers = list[index + 1].map(peer => ({
+                        region: peer[0],
+                        ip: peer[1],
+                        resolvedIp: peer[2],
+                        client: peer[5],
+                        flags: peer[6],
+                        downloadSpeed: peer[8],
+                        uploadSpeed: peer[9],
+                        torrentHash,
+                    }))
+                    return [...acc, ...peers]
+                } else return acc
+            }, [])
         else return []
     }
 
