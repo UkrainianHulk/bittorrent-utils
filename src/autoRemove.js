@@ -1,6 +1,5 @@
 const path = require('path')
 const config = require('config')
-const BitTorrent = require('./libs/BitTorrent.js')
 const { iteration } = require('./libs/utils.js')
 const log = require('./libs/log.js')
 const clients = require ('./clients.js')
