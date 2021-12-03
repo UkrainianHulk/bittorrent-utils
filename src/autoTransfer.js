@@ -89,7 +89,7 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
             const globalProfitStr = globalProfit.toLocaleString()
             const globalProfitPriceStr = (globalProfit * bttPrice).toLocaleString()
             
-            const payerProfitLogStr = `Last ${historyAgeHours} hour(s) profit: ${(payerProfitStr + ' BTT').brightMagenta} (${(payerProfitPriceStr + ' USDT').brightGreen})`
+            const payerProfitLogStr = `, last ${historyAgeHours} hour(s) profit: ${(payerProfitStr + ' BTT').brightMagenta} (${(payerProfitPriceStr + ' USDT').brightGreen})`
             if (payers.length === 1) {
                 log.info(transferLogStr + payerProfitLogStr)
             } else {
