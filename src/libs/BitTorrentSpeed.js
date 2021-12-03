@@ -24,7 +24,7 @@ module.exports = new class BitTorrentSpeed {
         try {
             fs.accessSync(portFilePath)
         } catch (error) {
-            log.debug(`${portFilePath} not found, retry in 5 seconds...`)
+            log.warn(`${portFilePath} not found, retry in 5 seconds...`)
             await new Promise(resolve => setTimeout(resolve, 5000))
             return this.getPort()
         }
