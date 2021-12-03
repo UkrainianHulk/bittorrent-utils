@@ -11,42 +11,53 @@ module.exports = class {
         this.guid = null
     }
 
-    async login() {
+    resetAuth() {
+        this.token = null
+        this.guid = null
+    }
+
+    async getAuth() {
         const url = new URL('token.html', this.guiUrl)
-        if (!this.loginFirtRunTime) this.loginFirtRunTime = new Date()
-        
-        try {
-            const response = await fetch(url.href, {
-                headers: {Authorization: 'Basic ' + Buffer.from(`${this.username}:${this.password}`).toString('base64')}
-            })
-            if (response.status !== 200) throw new Error(response.statusText)
-            const responseBody = await response.text()
-            this.guid = response.headers.get('set-cookie').match(/(?<=GUID=)\S+?(?=\b)/)[0]
-            this.token = responseBody.match(/(?<=>)\S+?(?=<)/)[0]
-            return this
-        } catch (error) {
-            if (error.code === 'ECONNREFUSED') {
-                log.debug(`${url.href} not responding, retry in 5 seconds...`)
-                await new Promise(resolve => setTimeout(resolve, 5000))
-                return this.login()
-            } else {
-                throw error
-            }
-        }
+
+        if (this.token !== null & this.guid !== null) return {token: this.token, guid: this.guid}
+
+        const response = await fetch(url.href, {
+            headers: {Authorization: 'Basic ' + Buffer.from(`${this.username}:${this.password}`).toString('base64')}
+        })
+        if (response.status !== 200) throw new Error(response.statusText)
+
+        const responseBody = await response.text()
+        this.guid = response.headers.get('set-cookie').match(/(?<=GUID=)\S+?(?=\b)/)[0]
+        this.token = responseBody.match(/(?<=>)\S+?(?=<)/)[0]
+        return {token: this.token, guid: this.guid}
     }
 
     async authorizedRequest(url) {
-        if (this.token === null || this.guid === null) await this.login()
-        url.searchParams.set('token', this.token)
-        const response = await fetch(url.href, { headers: {
-            Authorization: 'Basic ' + Buffer.from(`${this.username}:${this.password}`).toString('base64'),
-            Cookie: `GUID=${this.guid}`
-        }})
-        if (response.status === 200) return response.json()
-        else {
-            const errorMessage = `response status ${response.status} - ` + (await response.text()).replace(/(\r\n|\n|\r)/gm, '') + ', trying to relogin...'
-            await this.login()
-            throw new Error(errorMessage)
+        try {
+            const { token, guid } = await this.getAuth()
+            url.searchParams.set('token', token)
+            const response = await fetch(url.href, { headers: {
+                Authorization: 'Basic ' + Buffer.from(`${this.username}:${this.password}`).toString('base64'),
+                Cookie: `GUID=${guid}`
+            }})
+            if (response.status === 200) return response.json()
+            else {
+                log.warn(`Response status ${response.status} - ` + (await response.text()).replace(/(\r\n|\n|\r)/gm, '') + ', did you restart client? Trying to relogin in 5 seconds...')
+                await new Promise(resolve => setTimeout(resolve, 5000))
+
+                this.resetAuth()
+                await this.getAuth()
+                
+                return this.authorizedRequest(url)
+            }
+        } catch (error) {
+            if (error.code === 'ECONNREFUSED') {
+                log.warn(`${url.href} not responding, retry in 5 seconds...`)
+                await new Promise(resolve => setTimeout(resolve, 5000))
+                return this.authorizedRequest(url)
+            } else {
+                throw error
+            }
         }
     }
 

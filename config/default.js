@@ -2,8 +2,8 @@ module.exports = {
     // Transfer attempt interval in seconds. Set this to 0 to disable
     // Интервал между попытками пеевода. Установите 0 чтобы отключить
     AUTOTRANSFER_INTERVAL_SECONDS: 1,
-    // Array of payer's SPEED or BTFS private keys or string 'auto' - makes app to autodetect ip-app private key
-    // Массив приватных ключей (SPEED или BTFS) плательщика или строка 'auto' - автоматическое определение приватного ключа in-app кошелька
+    // Array of payer's SPEED or BTFS private keys or string 'auto' - makes app to autodetect local ip-app wallet private key
+    // Массив приватных ключей (SPEED или BTFS) плательщика или строка 'auto' - автоматическое определение приватного ключа локального in-app кошелька
     AUTOTRANSFER_FROM: [
         '865b2084abd1909b1a1edc836da8edc64f74239a34d04bc2b6ef94c2016a8c45',
         'ad861e2b1876c7071fec870e02e6b1527d443fd45d05aceeb64e4236b7a1b7eb'
@@ -15,8 +15,8 @@ module.exports = {
         GUI_URL: 'http://localhost:8080/gui/',   
         USERNAME: 'yourusername',                
         PASSWORD: 'yourpassword',                
-        IPFILTER_FILE_PATH: 'auto',
-        BITTORRENT_SPEED_PORT_FILE_PATH: 'auto'
+        IPFILTER_FILE_PATH: 'auto',                 // for local client only, только для локального клиента
+        BITTORRENT_SPEED_PORT_FILE_PATH: 'auto'     // for local client only, только для локального клиента
     }, {
         GUI_URL: 'https://yourdomain.com/gui/',
         USERNAME: 'yourusername',
@@ -39,7 +39,7 @@ module.exports = {
         seed_ratio: 0,
         max_dl_rate: 0,
         max_ul_rate: 0,
-     // bind_port: 35000,
+        bind_port: 0,
         rand_port_on_start: true,
         upnp: true,
         start_minimized: false,

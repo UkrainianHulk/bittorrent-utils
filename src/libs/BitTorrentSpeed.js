@@ -43,7 +43,7 @@ module.exports = new class BitTorrentSpeed {
         return url
     }
 
-    getToken = async () => {
+    getAuth = async () => {
         if (this.token !== null) return this.token
         const url = await this.getApiUrl()
         url.pathname += 'token'
@@ -56,14 +56,14 @@ module.exports = new class BitTorrentSpeed {
 
     authorizedRequest = async (url, options) => {
         try {
-            const token =  await this.getToken()
+            const token = await this.getAuth()
             url.searchParams.set('t', token)
             const response = await fetch(url.href, options)
             if (response.status !== 200) throw new Error(response.statusText)
             else return response.text()
         } catch (error) {
             if (error.code === 'ECONNREFUSED') {
-                log.debug(`${url.href} not responding, retry in 5 seconds...`)
+                log.warn(`${url.href} not responding, retry in 5 seconds...`)
                 await new Promise(resolve => setTimeout(resolve, 5000))
                 return this.authorizedRequest(url, options)
             } else {
