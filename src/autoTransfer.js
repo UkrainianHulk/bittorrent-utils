@@ -76,7 +76,7 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
         const recipientBalanceStr = UBTTtoBTT(recipientBalance).toLocaleString()
         const payementAmountPriceStr = (UBTTtoBTT(transferResult.paymentAmount) * bttPrice).toLocaleString()
         const recipientBalancePriceStr = (UBTTtoBTT(recipientBalance) * bttPrice).toLocaleString()
-        const transferLogStr = `Payer #${payerIndex}: ${(paymentAmountStr).brightMagenta} -> ${(recipientBalanceStr + ' BTT').brightMagenta} (${(recipientBalancePriceStr + ' USDT').green})`
+        const transferLogStr = `Payer #${payerIndex}: ${(paymentAmountStr).brightMagenta} -> ${(recipientBalanceStr + ' BTT').brightMagenta} (${(recipientBalancePriceStr + ' USDT').brightGreen})`
         
         if (!historyAgeHours) log.info(transferLogStr)
         else if (historyAgeHours) {
@@ -90,11 +90,11 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
             const globalProfitPriceStr = (globalProfit * bttPrice).toLocaleString()
             
             const payerProfitLogStr = `
-                                 Last ${historyAgeHours} hour(s) profit: ${(payerProfitStr + ' BTT').brightMagenta} (${(payerProfitPriceStr + ' USDT').green})`
+                                 Last ${historyAgeHours} hour(s) profit: ${(payerProfitStr + ' BTT').brightMagenta} (${(payerProfitPriceStr + ' USDT').brightGreen})`
             if (payers.length === 1) {
                 log.info(transferLogStr + payerProfitLogStr)
             } else {
-                log.info(transferLogStr + payerProfitLogStr + ` - ${payerProfitPercent}% of global ${(globalProfitStr + ' BTT').brightMagenta} (${(globalProfitPriceStr + ' USDT').green})`)
+                log.info(transferLogStr + payerProfitLogStr + ` - ${payerProfitPercent}% of global ${(globalProfitStr + ' BTT').brightMagenta} (${(globalProfitPriceStr + ' USDT').brightGreen})`)
             }
         }
 
