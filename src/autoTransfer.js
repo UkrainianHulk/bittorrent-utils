@@ -76,7 +76,7 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
         const recipientBalanceStr = UBTTtoBTT(recipientBalance).toLocaleString()
         const payementAmountPriceStr = (UBTTtoBTT(transferResult.paymentAmount) * bttPrice).toLocaleString()
         const recipientBalancePriceStr = (UBTTtoBTT(recipientBalance) * bttPrice).toLocaleString()
-        const transferLogStr = `Payer #${payerIndex}: ${(paymentAmountStr + ' BTT').brightMagenta} (${(payementAmountPriceStr + ' USDT').green}) ${'->'.brightYellow} ${(recipientBalanceStr + ' BTT').brightMagenta} (${(recipientBalancePriceStr + ' USDT').green})`
+        const transferLogStr = `Payer #${payerIndex}: ${(paymentAmountStr).brightMagenta} -> ${(recipientBalanceStr + ' BTT').brightMagenta} (${(recipientBalancePriceStr + ' USDT').green})`
         
         if (!historyAgeHours) log.info(transferLogStr)
         else if (historyAgeHours) {
