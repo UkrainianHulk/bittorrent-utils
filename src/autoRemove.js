@@ -62,10 +62,10 @@ const removeByAmount = async (list, client, clientIndex) => {
 
     if (list.length > maxAmount) {
         const exccess = list.length - maxAmount
-        log.info(`Client #${clientIndex}: ${list.length} torrent(s) of ${maxAmount} MAX, exccess = ${exccess}`)
+        log.info(`Client #${clientIndex}: torrents amount - ${list.length} of ${maxAmount}, exccess = ${exccess}`)
         removalList.push(...list.slice(maxAmount, list.length))
     } else {
-        log.debug(`Client #${clientIndex}: ${list.length} torrent(s) of ${maxAmount} MAX`)
+        log.debug(`Client #${clientIndex}: torrents amount - ${list.length} of ${maxAmount}`)
     }
 
     return removalList

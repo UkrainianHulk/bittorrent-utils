@@ -1,5 +1,6 @@
 const config = require('config')
 const colors = require('colors')
+const fetch = require('node-fetch')
 const inAppTransfer = require('./libs/inAppTransfer.js')
 const ledgerRPC = require('./libs/ledgerRPC.js')
 const bitTorrentSpeed = require('./libs/BitTorrentSpeed.js')
@@ -8,6 +9,13 @@ const log = require('./libs/log.js')
 
 const recipientKey = config.get('AUTOTRANSFER_TO')
 const historyAgeHours = config.get('AUTOTRANSFER_HISTORY_AGE_HOURS')
+
+const getBttPrice = async () => {
+    const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTTUSDT')
+    const json = await response.json()
+    const value = parseFloat(json.price)
+    return value
+}
 
 const getPayers = async () => {
     try {
@@ -43,7 +51,7 @@ const Hisotry = class {
 
 const history = new Hisotry(historyAgeHours)
 
-const autoTransfer = async (payerPrivateKey, payerIndex) => {
+const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
     try {
         const transferResult = await inAppTransfer({
             payerIndex,
@@ -51,24 +59,43 @@ const autoTransfer = async (payerPrivateKey, payerIndex) => {
             recipientKey: recipientKey,
             amount: 'all'
         })
+
         history.push({
             payerIndex,
             paymentAmount: transferResult.paymentAmount,
             timestamp: Date.now()
         })
+        
         const recipientBalance = (await ledgerRPC.createAccount({
             key: recipientKey
         })).account.balance
+
+        const bttPrice = await getBttPrice()
+
+        const paymentAmountStr = UBTTtoBTT(transferResult.paymentAmount).toLocaleString()
+        const recipientBalanceStr = UBTTtoBTT(recipientBalance).toLocaleString()
+        const payementAmountPriceStr = (UBTTtoBTT(transferResult.paymentAmount) * bttPrice).toLocaleString()
+        const recipientBalancePriceStr = (UBTTtoBTT(recipientBalance) * bttPrice).toLocaleString()
+        const transferLogStr = `Payer #${payerIndex}: ${(paymentAmountStr + ' BTT').brightMagenta} (${(payementAmountPriceStr + ' USDT').green}) ${'->'.brightYellow} ${(recipientBalanceStr + ' BTT').brightMagenta} (${(recipientBalancePriceStr + ' USDT').green})`
         
-        const transferLogString = `Payer #${payerIndex}: ` + UBTTtoBTT(transferResult.paymentAmount).toLocaleString().green + ' -> ' + UBTTtoBTT(recipientBalance).toLocaleString().brightGreen + ' BTT'
-        
-        if (!historyAgeHours) log.info(transferLogString)
+        if (!historyAgeHours) log.info(transferLogStr)
         else if (historyAgeHours) {
-            const globalProfit = UBTTtoBTT(history.getGlobalProfitability())
             const payerProfit = UBTTtoBTT(history.getPayerProfitability(payerIndex))
+            const globalProfit = UBTTtoBTT(history.getGlobalProfitability())
             const payerProfitPercent = Math.round(payerProfit/globalProfit*10000) / 100
+
+            const payerProfitStr = payerProfit.toLocaleString()
+            const payerProfitPriceStr = (payerProfit * bttPrice).toLocaleString()
+            const globalProfitStr = globalProfit.toLocaleString()
+            const globalProfitPriceStr = (globalProfit * bttPrice).toLocaleString()
             
-            log.info(transferLogString + `, last ${historyAgeHours} hour(s) profit: ${payerProfit.toLocaleString().cyan} - ${(payerProfitPercent + '%').cyan} of global (${globalProfit.toLocaleString().brightCyan} BTT)`)
+            const payerProfitLogStr = `
+                                 Last ${historyAgeHours} hour(s) profit: ${(payerProfitStr + ' BTT').brightMagenta} (${(payerProfitPriceStr + ' USDT').green})`
+            if (payers.length === 1) {
+                log.info(transferLogStr + payerProfitLogStr)
+            } else {
+                log.info(transferLogStr + payerProfitLogStr + ` - ${payerProfitPercent}% of global ${(globalProfitStr + ' BTT').brightMagenta} (${(globalProfitPriceStr + ' USDT').green})`)
+            }
         }
 
         return
