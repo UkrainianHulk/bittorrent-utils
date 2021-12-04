@@ -1,6 +1,6 @@
 const config = require('config')
 const ledgerRPC = require('./ledgerRPC.js')
-const {numberToPercent} = require('./utils.js')
+const { numberToPercent } = require('./utils.js')
 
 const devFeePercent = numberToPercent(config.get('DEV_FEE_PERCENT'))
 const devPublicKey = 'BFHYIrLExXfnWwdPCD827n6n/dhcU6d1TjL0xmbSb0977to4Zx5YOQ9vqkYxqTsQzjgZf2Pfltgt4Kt4cjmaeT0='
