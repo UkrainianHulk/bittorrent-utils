@@ -30,8 +30,9 @@ const filterPeers = async (client, clientIndex) => {
     }, [])
 
     if (peersToBan.length) {
+        const ipfilterFilePath = client.settings.IPFILTER_FILE_PATH === 'auto' ? path.join(process.env.APPDATA, "BitTorrent/ipfilter.dat") : client.settings.IPFILTER_FILE_PATH
+        
         try {
-            const ipfilterFilePath = client.settings.IPFILTER_FILE_PATH === 'auto' ? path.join(process.env.APPDATA, "BitTorrent/ipfilter.dat") : client.settings.IPFILTER_FILE_PATH
             fs.accessSync(path.dirname(ipfilterFilePath))
 
             const bannedIps = (fs.readFileSync(ipfilterFilePath, 'utf-8')).split('\n').filter(ip => ip !== '')
