@@ -7,7 +7,32 @@ const { iteration } = require('./libs/utils.js')
 const log = require('./libs/log.js')
 const clients = require ('./clients.js')
 
+let filterListLastResetTime = null
+
+const resetFilterList = (ipfilterFilePath, clientIndex) => {
+    try {
+        fs.accessSync(ipfilterFilePath)
+        log.info(`Client #${clientIndex}: reseting ip filter list...`)
+        fs.writeFileSync(ipfilterFilePath, '')
+        filterListLastResetTime = Date.now()
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            log.debug(`Client #${clientIndex}: ipfilter.dat does not exist, skipping ip filter reset...`)
+        } else {
+            throw error
+        }
+    }
+}
+
 const filterPeers = async (client, clientIndex) => {
+    const ipfilterFilePath = client.settings.IPFILTER_FILE_PATH === 'auto' ? path.join(process.env.APPDATA, "BitTorrent/ipfilter.dat") : client.settings.IPFILTER_FILE_PATH
+    fs.accessSync(path.dirname(ipfilterFilePath))
+    
+    if (config.get('PEERS_FILTER_RESET_INTERVAL_MINUTES')) {
+        if (filterListLastResetTime === null) resetFilterList(ipfilterFilePath, clientIndex)
+        else if (Date.now() - filterListLastResetTime > config.get('PEERS_FILTER_RESET_INTERVAL_MINUTES') * 60 * 1000) resetFilterList(ipfilterFilePath, clientIndex)
+    }
+
     const torrentList = await client.getList()
     const peerList = await client.getPeers(torrentList.map(torrent => torrent.hash))
 
@@ -29,11 +54,9 @@ const filterPeers = async (client, clientIndex) => {
 
     }, [])
 
-    if (peersToBan.length) {
-        const ipfilterFilePath = client.settings.IPFILTER_FILE_PATH === 'auto' ? path.join(process.env.APPDATA, "BitTorrent/ipfilter.dat") : client.settings.IPFILTER_FILE_PATH
-        
+    if (peersToBan.length) {        
         try {
-            fs.accessSync(path.dirname(ipfilterFilePath))
+            fs.accessSync(ipfilterFilePath)
 
             const bannedIps = (fs.readFileSync(ipfilterFilePath, 'utf-8')).split('\n').filter(ip => ip !== '')
             const newBannedIps = bannedIps.concat(peersToBan.map(peer => peer.ip))
@@ -43,13 +66,14 @@ const filterPeers = async (client, clientIndex) => {
             await client.setSettings({'ipfilter.enable': false})
             await client.setSettings({'ipfilter.enable': true})
             
-            log.info(`Client #${clientIndex}: ${peerList.length} peer(s), ${peersToBan.length.toLocaleString()} new ban(s) (${(newBannedIps.length).toLocaleString()}/${config.get('PEERS_FILTER_BANLIST_MAX_LENGTH')}): ${peersToBan.map(peer => peer.client).join(', ')}`)
+            log.info(`Client #${clientIndex}: ${peerList.length} peer(s), ${peersToBan.length.toLocaleString()} new ban(s) (${newBannedIps.length.toLocaleString()}/${config.get('PEERS_FILTER_BANLIST_MAX_LENGTH').toLocaleString()}): ${peersToBan.map(peer => peer.client).join(', ')}`)
         } catch (error) {
             if (error.code === 'ENOENT') {
+                log.debug(`Client #${clientIndex}: ipfilter.dat does not exist, creating new one...`)
                 fs.writeFileSync(ipfilterFilePath, '')
-                log.debug(`Client #${clientIndex}: ipfilter.dat file created`)
+            } else {
+                throw error
             }
-            else throw error
         }
     } else {
         log.debug(`Client #${clientIndex}: no peers to ban`)

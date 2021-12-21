@@ -14,13 +14,13 @@ module.exports = {
     CLIENTS: [{
         GUI_URL: 'http://localhost:8080/gui/',   
         USERNAME: 'yourusername',                
-        PASSWORD: 'yourpassword',                
+        PASSWORD: 'yourpassword',  
         IPFILTER_FILE_PATH: 'auto',                 // for local client only, только для локального клиента
-        BITTORRENT_SPEED_PORT_FILE_PATH: 'auto'     // for local client only, только для локального клиента
+        BITTORRENT_SPEED_PORT_FILE_PATH: 'auto',    // for local client only, только для локального клиента
     }, {
         GUI_URL: 'https://yourdomain.com/gui/',
         USERNAME: 'yourusername',
-        PASSWORD: 'yourpassword'
+        PASSWORD: 'yourpassword',
     }],
 
     AUTOREMOVE_INTERVAL_SECONDS: 0,
@@ -61,9 +61,10 @@ module.exports = {
     PEERS_FILTER_INTERVAL_SECONDS: 0,
     PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
     PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
-    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.2',
+    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.3',
     PEERS_FILTER_BANLIST_MAX_LENGTH: 1000,
+    PEERS_FILTER_RESET_INTERVAL_MINUTES: 5,
 
     DEV_FEE_PERCENT: 1,
-    LOG_LEVEL: 2,
+    LOG_LEVEL: 2
 }

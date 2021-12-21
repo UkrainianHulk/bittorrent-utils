@@ -151,4 +151,11 @@ module.exports = class {
         }
         return await this.authorizedRequest(url)
     }
+
+    async addUrl(link) {
+        const url = new URL(this.guiUrl)
+        url.searchParams.set('action', 'add-url')
+        url.searchParams.append('s', link)
+        return await this.authorizedRequest(url)
+    }
 }
