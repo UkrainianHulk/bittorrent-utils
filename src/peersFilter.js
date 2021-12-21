@@ -73,7 +73,7 @@ const filterPeers = async (client, clientIndex) => {
         await updateIpFilter()
 
         const bannedIpsAmount = (fs.readFileSync(ipfilterFilePath, 'utf-8')).split('\n').filter(ip => ip !== '').length
-        log.info(`Client #${clientIndex}: ${peerList.length} peer(s), ${peersToBan.length.toLocaleString()} new ban(s) (${bannedIpsAmount.toLocaleString} total): ${peersToBan.map(peer => peer.client).join(', ')}`)
+        log.info(`Client #${clientIndex}: ${peerList.length} peer(s), ${peersToBan.length.toLocaleString()} new ban(s) (${bannedIpsAmount.toLocaleString()} total): ${peersToBan.map(peer => peer.client).join(', ')}`)
     } else {
         log.debug(`Client #${clientIndex}: no peers to ban`)
     }
