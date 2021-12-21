@@ -69,7 +69,7 @@ const filterPeers = async (client, clientIndex) => {
             } else throw error
         } 
 
-        fs.appendFileSync(ipfilterFilePath, peersToBan.join('\n') + '\n')
+        fs.appendFileSync(ipfilterFilePath, peersToBan.map(peer => peer.ip).join('\n') + '\n')
         await updateIpFilter()
 
         const bannedIpsAmount = (fs.readFileSync(ipfilterFilePath, 'utf-8')).split('\n').filter(ip => ip !== '').length
