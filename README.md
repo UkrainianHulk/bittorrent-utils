@@ -27,7 +27,11 @@ Community - [Telegram](https://t.me/bittorrent_utils)
  
   > Node.js v13.14.0 is used for compatibility with Windows 7, in other cases you can try newer versions of Node.js
 
-* [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip script
+* [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip script or use git
+
+  ```
+  git clone https://github.com/UkrainianHulk/bittorrent-utils
+  ```
  
 * Edit `bittorrent-utils/config/user.js`
   
