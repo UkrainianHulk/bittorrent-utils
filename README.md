@@ -93,6 +93,12 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 >
 > **A:** Navigate in the browser http://127.0.0.1:[BITTORRENT_SPEED_PORT]/api/refresh_balance
 
+> **Q: Where can i find bittorrent speed port?**
+>
+> **A:** C:\Users\User\AppData\Local\BitTorrentHelper\port (example path) or in browser URL bar
+> 
+>  ![](screenshots/10.png?raw=true)
+
 > **Q: What is the address of the withdrawal gateway?**
 >
 > **A:** [TTZu7wpHa9tnQjFUDrsjgPfXE7fck7yYs5](https://tronscan.org/#/address/TTZu7wpHa9tnQjFUDrsjgPfXE7fck7yYs5)
