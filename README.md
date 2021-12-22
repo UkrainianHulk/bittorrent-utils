@@ -40,27 +40,39 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 ### Windows
 
 * Install Node.js if not installed already. Recommended version is [v13.14.0](https://nodejs.org/download/release/v13.14.0/)
+ 
   > Node.js v13.14.0 is used for compatibility with Windows 7, in other cases you can try newer versions of Node.js
+
 * [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip script
+ 
 * Edit `bittorrent-utils/config/user.js`
+  
   > `user.js` overwrites default settings, which can be found here `bittorrent-utils/config/default.js`
+
 * Run `bittorrent-utils/START.bat`
 
 ### Linux
 
 * Install Node.js and Git if not installed already: 
+ 
     ```
     apt update && apt install nodejs git
     ```
+
 * Clone this repository:
+ 
     ```
     git clone https://github.com/UkrainianHulk/bittorrent-utils
     ```
+
 * Edit configuration file:
+ 
     ```
     nano bittorrent-utils/config/user.js
     ```
+
 * Navigate to script directory and run:
+ 
     ```
     cd bittorrent-utils && npm start
     ```
