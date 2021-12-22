@@ -89,7 +89,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 >
 > **A:** Navigate in the browser http://127.0.0.1:[BITTORRENT_SPEED_PORT]/api/public_key
 
-> **Q: My speed wallet shows wrong balance?**
+> **Q: My speed wallet shows wrong balance!**
 >
 > **A:** Navigate in the browser http://127.0.0.1:[BITTORRENT_SPEED_PORT]/api/refresh_balance
 
