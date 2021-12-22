@@ -27,10 +27,10 @@ const filterPeers = async (client, clientIndex) => {
     const resetFilterList = async () => {
         try {
             fs.accessSync(ipfilterFilePath)
-            log.info(`Client #${clientIndex}: reseting ip filter list...`)
             fs.writeFileSync(ipfilterFilePath, '')
             filterListLastResetTime = Date.now()
             await updateIpFilter()
+            log.info(`Client #${clientIndex}: ip filter has been reset`)
         } catch (error) {
             if (error.code === 'ENOENT') {
                 log.debug(`Client #${clientIndex}: ipfilter.dat does not exist, skipping ip filter reset...`)

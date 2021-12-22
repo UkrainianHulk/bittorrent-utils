@@ -97,16 +97,3 @@ const autoRemove = async (client, clientIndex) => {
 const autoRemoveIteration = (...args) => iteration(autoRemove, config.get('AUTOREMOVE_INTERVAL_SECONDS') * 1000, ...args)
 
 module.exports.start = () => Promise.all(clients.map(autoRemoveIteration))
-
-// const sortTorrents = (list) => list.map(item => {
-//     const started = !!(item.status % 2)
-    
-//     if (!started) return {...item, coefficient: 0}
-
-//     const seedingDurationDays = (Date.now() / 1000 - item.added) / 60 / 60 / 24
-//     const uploadRatio = item.ratio / 1000
-//     const seedsRatio = item.seedsInSwarm / item.peersInSwarm
-//     const coefficient = (uploadRatio + 1) / (seedsRatio + 1) / Math.pow(seedingDurationDays + 1, 2)
-    
-//     return {...item, started, seedingDurationDays, uploadRatio, seedsRatio, coefficient}
-// }).sort((a, b) => b.coefficient - a.coefficient)

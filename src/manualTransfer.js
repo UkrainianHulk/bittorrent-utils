@@ -66,7 +66,7 @@ const askConfirmation = async () => {
 }
 
 async function run() {
-    log.info(`You have launched the BTT in-app transfer utility.\nDon't worry, your private key will not be sent to anyone.\nRemember to check input data twice.\nFollow the program prompts...\n`)
+    log.info(`You have launched the BTT in-app transfer utility.\nRemember to check input data twice.\nFollow the program prompts...\n`)
     const payer = await askPayer()
     rl.pause()
     const payerBalance = (await ledgerRPC.createAccount({
