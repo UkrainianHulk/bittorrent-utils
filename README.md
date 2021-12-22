@@ -3,22 +3,6 @@
 Convenient and private assistant for BTT farming </br>
 Community - [Telegram](https://t.me/bittorrent_utils)
 
-## Table of contents
-
-- [BitTorrent Utilities](#bittorrent-utilities)
-  - [Table of contents](#table-of-contents)
-  - [Quick overview](#quick-overview)
-    - [Features](#features)
-    - [Сonsole output sample](#сonsole-output-sample)
-  - [Quick Start](#quick-start)
-    - [Windows](#windows)
-    - [Linux](#linux)
-  - [Setup](#setup)
-  - [FAQ](#faq)
-  - [Support](#support)
-  - [Donations](#donations)
-  - [License](#license)
-
 ## Quick overview
 
 ### Features
