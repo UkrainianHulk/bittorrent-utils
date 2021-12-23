@@ -9,9 +9,9 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 * **Transfer IN-APP BTT**: transfer IN-APP BTT between wallets
 * **Automatic transfer of IN-APP BTT**: collect IN-APP BTT automatically from any amount of wallets and avoid losing them while downloading with µTorrent/BitTorrent
-* **Automatic removal of torrents**: space-dependent and/or amount-dependent autoremoving of the torrents
+* **Automatic removal of torrents**: space-dependent and/or amount-dependent automatic removal of torrents
 * **Peers filter**: exclude peers that use no-BTT clients
-* **BitTorrent & μTorrent autoconfig**: configure all your BitTorrent or μTorrent clients from one place
+* **BitTorrent & μTorrent automatic configuration**: configure all your BitTorrent or μTorrent clients from one place 
 * **Cross-platform**: windows and linux compatible
 * **Private**: local transactions signing, all private actions take place only on your pc
 
@@ -25,7 +25,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 * Install Node.js if not installed already. Recommended version is [v13.14.0](https://nodejs.org/download/release/v13.14.0/)
  
-  > Node.js v13.14.0 is used for compatibility with Windows 7, in other cases you can try newer versions of Node.js
+  > **NOTE:** Node.js v13.14.0 is used for compatibility with Windows 7 only, in other cases you can try newer versions of Node.js
 
 * [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip script or use git:
 
@@ -34,8 +34,6 @@ Community - [Telegram](https://t.me/bittorrent_utils)
   ```
  
 * Edit `bittorrent-utils/config/user.js`
-  
-  > `user.js` overwrites default settings, which can be found here: `bittorrent-utils/config/default.js`
 
 * Run `bittorrent-utils/START.bat`
 
@@ -66,6 +64,28 @@ Community - [Telegram](https://t.me/bittorrent_utils)
     ```
 
 ## Setup
+
+### Scenarios
+
+There are two scenarios for using the script:
+
+1. Local script instance for each client
+   * all script features can be set up
+2. Remote script instance for multiple clients
+   * peers filter won't work
+
+Сonsidering these options, you can choose the one that suits you or even combine them. For example, you can configure local scripts to block peers and torrents removal, while remote script can be configured for centralized configuration management and in-app BTT collection.
+
+### Settings
+
+The script provides two config files:
+
+1. User config file location: `bittorrent-utils/config/user.js`
+    * the settings from this file overwrite the default settings from the `default.js` file
+    * edit this file to configure your instance of script
+2. Default config file location: `bittorrent-utils/config/default.js`
+    * a file with the default settings and their description
+    * avoid editing this file in favor of editing `user.js` file
 
 ## FAQ
 

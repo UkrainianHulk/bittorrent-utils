@@ -16,5 +16,5 @@ module.exports = {
 
     // AUTOCONFIG_ENABLE: true,
 
-    // PEERS_FILTER_INTERVAL_SECONDS: 3,       
+    // PEERS_FILTER_INTERVAL_SECONDS: 5,       
 }
