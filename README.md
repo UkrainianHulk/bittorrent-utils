@@ -113,7 +113,7 @@ The script provides two config files:
 
 ## Support
 
-* You can ask for help or discuss the application in our community group: [Telegram](https://t.me/bittorrent_utils)
+* You can ask for help or discuss the application in our community group in [Telegram](https://t.me/bittorrent_utils)
 * If you found a bug, please open a [new issue](https://github.com/UkrainianHulk/bittorrent-utils/issues/new)
 
 ## Donations
