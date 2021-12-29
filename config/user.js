@@ -1,6 +1,6 @@
 module.exports = {
     AUTOTRANSFER_FROM: 'auto',
-    AUTOTRANSFER_TO: 'BFHYIrLExXfnWwdPCD827n6n/dhcU6d1TjL0xmbSb0977to4Zx5YOQ9vqkYxqTsQzjgZf2Pfltgt4Kt4cjmaeT0=',
+    AUTOTRANSFER_TO: 'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
 
     // CLIENTS: [{
     //     GUI_URL: 'http://localhost:8080/gui/',   
