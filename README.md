@@ -107,9 +107,12 @@ The script provides two config files:
 > 
 >  ![](screenshots/10.png?raw=true)
 
-> **Q: What is the address of the withdrawal gateway?**
->
-> **A:** [TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA](https://tronscan.org/#/address/TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA)
+## Useful links
+
+* Withdrawal gateway: [TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA](https://tronscan.org/#/address/TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA)
+* BTTOLD -> WBTT: https://just.tronscan.io/#/wbtt
+* WBTT -> BTT: https://sunswap.com/
+* Tron fees calculator: https://tronstation.io/calculator
 
 ## Support
 
