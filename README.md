@@ -112,7 +112,7 @@ The script provides two config files:
 * Withdrawal gateway: [TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA](https://tronscan.org/#/address/TWaSm8dnvTdJQ9hcpW3g8m4QEfJspcuDwA)
 * BTTOLD -> WBTT: https://just.tronscan.io/#/wbtt
 * WBTT -> BTT: https://sunswap.com/
-* Tron fees calculator: https://tronstation.io/calculator
+* TRON fees calculator: https://tronstation.io/calculator
 
 ## Support
 
