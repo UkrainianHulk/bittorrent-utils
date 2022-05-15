@@ -6,12 +6,6 @@ module.exports.numberToPercent = (number) => (number > 0 ? number > 100 ? 100 : 
 module.exports.UBTTtoBTT = (amount) => amount / 1000000
 module.exports.BTTtoUBTT = (amount) => amount * 1000000
 
-module.exports.parseBoolean = (string) => {
-    if (string === 'true') return true
-    else if (string === 'false') return false
-    else return null
-}
-
 module.exports.iteration = async function (func, delay, ...args) {
     if (!module.exports.isProduction) try {
         return await func(...args)

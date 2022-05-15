@@ -106,9 +106,10 @@ const autoRemove = async (client) => {
     if (removalList.length > 0) {
         const uniqueRemovalHashList = [...new Set(removalList.map(item => item.hash))]
         const uniqueRemovalList = uniqueRemovalHashList.map(hash => removalList.find(item => item.hash === hash))
+        const torrentNameMaxLength = 80
     
         console.table(uniqueRemovalList.map(t => ({
-            name: t.name,
+            name: t.name.length > torrentNameMaxLength ? t.name.substring(0, torrentNameMaxLength - 3) + '...' : t.name,
             drive: path.parse(t.path).root,
             size: bytesToGB(t.size).toFixed(2) + ' GB',
             ratio: t.ratio / 1000,

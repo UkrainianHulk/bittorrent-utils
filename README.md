@@ -125,4 +125,4 @@ The script provides two config files:
 * BTT (in-app) BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=
 
 ## [License](https://github.com/UkrainianHulk/bittorrent-utils/blob/main/LICENSE)
-Copyright © 2021 Yaroslav Sorochan
+Copyright © 2021 - 2022 Yaroslav Sorochan

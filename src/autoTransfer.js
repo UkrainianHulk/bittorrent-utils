@@ -24,6 +24,8 @@ const getPayers = async () => {
             const payer = await bitTorrentSpeed.getPrivateKey()
             log.info(`Local client private key: ${payer}`)
             return [payer]
+        } else if (typeof configValue === 'string') {
+            return [configValue]
         } else return configValue
     } catch (error) {
         log.error(error)
