@@ -22,7 +22,7 @@ const askPayer = async () => {
     try {
         return new PrivateKey(payer)
     } catch (error) {
-        log.error(error.message.brightRed)
+        console.error(error.message.brightRed)
         return await askPayer()
     }
 }
@@ -32,26 +32,26 @@ const askRecipient = async () => {
     try {
         return processKey(recipient)
     } catch (error) {
-        log.error(error.message.brightRed)
+        console.error(error.message.brightRed)
         return await askRecipient()
     }
 }
 
 const askAmount = async (balance) => {
     const amount = await question(`Enter BTT amount:\n`)
-    if (/^\d+$/.test(amount)) {
-        const amountInt = parseInt(amount) * 1000000
+    if (/^\d+([,\.]\d{1,6})?$/.test(amount)) {
+        const amountInt = parseFloat(amount.replace(',', '.')) * 1000000
         if (amountInt === 0) {
-            log.error(`Amount cant be zero`.brightRed)
+            console.error(`Amount cant be zero`.brightRed)
             return await askAmount(balance)
         }
         else if ((devFeePercent * amountInt + amountInt) <= balance) return amountInt
         else {
-            log.error(`Not anough balance ${devFeePercent ? 'considering the commission' : ''}`.brightRed)
+            console.error(`Not anough balance ${devFeePercent ? 'considering the commission' : ''}`.brightRed)
             return await askAmount(balance)
         }
     } else {
-        log.error('Enter correct amount'.brightRed)
+        console.error('Enter correct amount'.brightRed)
         return await askAmount(balance)
     }
 }
@@ -60,25 +60,26 @@ const askConfirmation = async () => {
     const confirmation = await question(`Type "YES" to confirm the transaction:\n`)
     if (confirmation === 'YES') return true
     else {
-        log.error(`Wrong confirmation. Please type "YES" or close the app`.brightRed)
+        console.error(`Wrong confirmation. Please type "YES" or close the app`.brightRed)
         return askConfirmation()
     }
 }
 
 async function run() {
-    log.info(`You have launched the BTT in-app transfer utility.\nRemember to check input data twice.\nFollow the program prompts...\n`)
+    console.log(`You have launched the BTT in-app transfer utility.`)
+    console.log(`Follow the program prompts and ` + `remember to check input data twice!`.cyan)
     const payer = await askPayer()
     rl.pause()
     const payerBalance = (await ledgerRPC.createAccount({
         key: payer.public.uncompressed.toString('base64')
     })).account.balance
-    log.info(`Payer's balance: ${(UBTTtoBTT(payerBalance)).toLocaleString()}`)
+    console.log(`Payer's balance: ` + `${(UBTTtoBTT(payerBalance)).toLocaleString()}`.brightMagenta)
     rl.resume()
     const recipient = await askRecipient()
     const amount = await askAmount(payerBalance)
     const devFeeAmount = Math.round(devFeePercent * amount)
 
-    log.info(`
+    console.log(`
         Payer: ${payer.source}
         Recipient: ${recipient.source}
         Amount: ${UBTTtoBTT(amount).toLocaleString()}
@@ -94,7 +95,7 @@ async function run() {
             recipientKey: recipient.source,
             amount: amount
         })
-        if (result) log.info('Success! '.green + `Payer's new balance: ${UBTTtoBTT(result.payerNewBalance).toLocaleString()} BTT`)
+        if (result) console.log('Success! '.green + `Payer's new balance: ` + `${UBTTtoBTT(result.payerNewBalance).toLocaleString()}`.brightMagenta)
     }
 
     rl.close()
