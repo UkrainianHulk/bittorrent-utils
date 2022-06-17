@@ -86,6 +86,7 @@ module.exports = class {
             torrentOrder: item [17],
             remaining: item[18],
             added: item[23],
+            completed: item[24],
             path: item[26],
         }))
     }
