@@ -19,7 +19,7 @@ module.exports.msToDHMS = (time)=>{
     const s = ms % MIN / SEC | 0;
     return `${time < 0 ? "-" : ""}${d}d ${h}h ${m}m ${s}s`
 }
-
+module.exports.setStringLength = (string, maxLength) => string.length > maxLength ? string.substring(0, maxLength - 3) + '...' : string.padEnd(maxLength, ' ')
 module.exports.iteration = async function (func, delay, ...args) {
     if (!module.exports.isProduction) try {
         return await func(...args)

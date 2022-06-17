@@ -2,7 +2,7 @@ const path = require('path')
 const config = require('config')
 const log = require('./libs/log.js')
 const clients = require ('./clients.js')
-const { iteration, bytesToGB, GBtoBytes, msToDHMS } = require('./libs/utils.js')
+const { iteration, bytesToGB, GBtoBytes, msToDHMS, setStringLength } = require('./libs/utils.js')
 
 const torrentsMaxAmount   = config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')
 const sizeQuotaPerDriveGB = config.get('AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB')
@@ -94,7 +94,7 @@ const autoRemove = async (client) => {
         uniqueRemovalList = uniqueRemovalList.filter((torrent) => {
             const seedingTime = currentTime - torrent.completed * 1000
             if (seedingTime < minSeedingTimeMS) {
-                log.info(`Prevented removing of "${torrent.name}" - low seeding time: ${Math.floor(torrent.seedingTime / 1000 / 60 / 60)}/${minSeedingTimeHours}h`)
+                log.info(`Prevented removing of "${setStringLength(torrent.name, 60)}" - low seeding time: ${Math.floor(torrent.seedingTime / 1000 / 60 / 60)}/${minSeedingTimeHours}h`)
                 return false
             } else return true
         })
@@ -103,11 +103,10 @@ const autoRemove = async (client) => {
     const uniqueRemovalHashList = uniqueRemovalList.map((item) => item.hash)
 
     if (uniqueRemovalHashList.length > 0) {
-        const torrentNameMaxLength = 80
 
         log.info('Torrents to remove:')
         console.table(uniqueRemovalList.map(t => ({
-            name: t.name.length > torrentNameMaxLength ? t.name.substring(0, torrentNameMaxLength - 3) + '...' : t.name,
+            name: setStringLength(t.name, 80),
             drive: path.parse(t.path).root,
             size: bytesToGB(t.size).toFixed(2) + ' GB',
             ratio: t.ratio / 1000,
