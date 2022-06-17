@@ -85,18 +85,18 @@ const autoRemove = async (client) => {
         removalList.push(...filteredList)
     }
 
-    const uniqueRemovalList = removalList.filter((item, index, self) => self.findIndex(i => i.hash === item.hash) === index)
+    let uniqueRemovalList = removalList.filter((item, index, self) => self.findIndex(i => i.hash === item.hash) === index)
 
     if (minSeedingTimeHours) {
         const minSeedingTimeMS = minSeedingTimeHours * 60 * 60 * 1000
         const currentTime = Date.now()
 
-        uniqueRemovalList.forEach((torrent, index) => {
+        uniqueRemovalList = uniqueRemovalList.filter((torrent) => {
             const seedingTime = currentTime - torrent.completed * 1000
             if (seedingTime < minSeedingTimeMS) {
-                delete uniqueRemovalList[index]
                 log.info(`Prevented removing of "${torrent.name}" - low seeding time: ${Math.floor(torrent.seedingTime / 1000 / 60 / 60)}/${minSeedingTimeHours}h`)
-            }
+                return false
+            } else return true
         })
     }
     
