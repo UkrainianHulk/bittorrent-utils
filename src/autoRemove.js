@@ -76,7 +76,7 @@ const autoRemove = async (client) => {
             const torrentsList = listsPerDrive[drive]
             const { filteredList: filteredDriveList, exccess, torrentsTotalSize } = filterBySizeQuota(torrentsList, sizeQuota)
             if (filteredDriveList.length > 0) {
-                log.info(`Client #${client.index}, ${drive} - ${bytesToGB(torrentsTotalSize).toFixed(2)}/${bytesToGB(sizeQuota).toFixed(2)}GB, exccess ${bytesToGB(exccess).toFixed(2)}GB`)
+                log.info(`Client #${client.index}, ${drive} - ${bytesToGB(torrentsTotalSize).toFixed(2)}/${bytesToGB(sizeQuota).toFixed(2)}GB, exccess = ${bytesToGB(exccess).toFixed(2)}GB`)
                 filteredList.push(...filteredDriveList)
             } else {
                 log.debug(`Client #${client.index}, torrents size at drive ${drive} - ${bytesToGB(torrentsTotalSize).toFixed(2)}GB of ${bytesToGB(sizeQuota).toFixed(2)}GB`)
@@ -85,25 +85,26 @@ const autoRemove = async (client) => {
         removalList.push(...filteredList)
     }
 
-    if (removalList.length > 0) {
-        const uniqueRemovalList = removalList.filter((item, index, self) => self.findIndex(i => i.hash === item.hash) === index)
+    const uniqueRemovalList = removalList.filter((item, index, self) => self.findIndex(i => i.hash === item.hash) === index)
 
-        if (minSeedingTimeHours) {
-            const minSeedingTimeMS = minSeedingTimeHours * 60 * 60 * 1000
-            const currentTime = Date.now()
+    if (minSeedingTimeHours) {
+        const minSeedingTimeMS = minSeedingTimeHours * 60 * 60 * 1000
+        const currentTime = Date.now()
 
-            uniqueRemovalList.forEach((torrent, index) => {
-                const seedingTime = currentTime - torrent.completed * 1000
-                if (seedingTime < minSeedingTimeMS) {
-                    delete uniqueRemovalList[index]
-                    log.info(`Prevented removing torrent "${torrent.name}", seeding time < ${minSeedingTimeHours}h`)
-                }
-            })
-        }
-        
-        const uniqueRemovalHashList = uniqueRemovalList.map((item) => item.hash)
-        const torrentNameMaxLength = 80
+        uniqueRemovalList.forEach((torrent, index) => {
+            const seedingTime = currentTime - torrent.completed * 1000
+            if (seedingTime < minSeedingTimeMS) {
+                delete uniqueRemovalList[index]
+                log.info(`Prevented removing of "${torrent.name}" - low seeding time: ${Math.floor(torrent.seedingTime / 1000 / 60 / 60)}/${minSeedingTimeHours}h`)
+            }
+        })
+    }
     
+    const uniqueRemovalHashList = uniqueRemovalList.map((item) => item.hash)
+
+    if (uniqueRemovalHashList.length > 0) {
+        const torrentNameMaxLength = 80
+
         log.info('Torrents to remove:')
         console.table(uniqueRemovalList.map(t => ({
             name: t.name.length > torrentNameMaxLength ? t.name.substring(0, torrentNameMaxLength - 3) + '...' : t.name,
@@ -112,7 +113,6 @@ const autoRemove = async (client) => {
             ratio: t.ratio / 1000,
             seedingTime: msToDHMS(t.seedingTime)
         })))
-    
         if (!preventRemoving) await client.deleteTorrents(uniqueRemovalHashList)
     }
 }
