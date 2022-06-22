@@ -1,22 +1,18 @@
 const config = require('config')
-const bitTorrentSpeed = require('./libs/BitTorrentSpeed.js')
 const log = require('./libs/log.js')
-const clients = require ('./clients.js')
+const client = require('./client.js')
 
-const autoconfigSettings = config.get('AUTOCONFIG_SETTINGS')
+const settings = config.get('AUTOCONFIG_SETTINGS')
 
-const setSettings = async (client, clientIndex) => {
+const setSettings = async (client) => {
     try {
-        await client.setSettings(autoconfigSettings)
-        log.info(`Client #${clientIndex}: settings applied`)
-
-        if (client.settings.BITTORRENT_SPEED_PORT_FILE_PATH) {
-            await bitTorrentSpeed.disableTokensSpending()
-            log.info(`Client #${clientIndex}: tokens spending disabled`)
-        }
+        await client.bitTorrent.setSettings(settings)
+        log.info(`Settings applied`)
+        await client.bitTorrentSpeed.disableTokensSpending()
+        log.info(`Tokens spending disabled`)
     } catch (error) {
-        log.error(`Client #${clientIndex}: ${error.message}`)
+        log.error(error.message)
     }
 }
 
-module.exports.start = () => Promise.all(clients.map(setSettings))
+module.exports.start = () => setSettings(client)

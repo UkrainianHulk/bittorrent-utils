@@ -1,44 +1,45 @@
 const fs = require('fs')
-const { env: ENV } = require('process')
+const { env } = require('process')
 const path = require('path')
 const { URL } = require('url')
 const fetch = require('node-fetch')
 const log = require('./log.js')
-const config = require('config')
 
-module.exports = new class BitTorrentSpeed {
-    constructor() {
-        this.apiUrlWithoutPort = 'http://127.0.0.1/api/'
+module.exports = class BitTorrentSpeed {
+    constructor(portFilePath) {
+        this.url = 'http://127.0.0.1/api/'
+        this.portFilePath = portFilePath
         this.port = null
         this.token = null
         this.privateKey = null
-        const clientWithBitTorrentSpeedPortFilePath = config.get('CLIENTS').find(item => typeof item.BITTORRENT_SPEED_PORT_FILE_PATH === 'string')
-        if (clientWithBitTorrentSpeedPortFilePath) this.portFilePath = clientWithBitTorrentSpeedPortFilePath.BITTORRENT_SPEED_PORT_FILE_PATH
     }
 
     getPort = async () => {
-        if (this.port !== null) return this.port        
+        if (this.port !== null) return this.port
 
-        const portFilePath = this.portFilePath === 'auto' || this.portFilePath === undefined ? path.join(ENV.LOCALAPPDATA, '/BitTorrentHelper/port') : this.portFilePath    
+        const portFilePath =
+            this.portFilePath === 'auto'
+                ? path.join(env.LOCALAPPDATA, '/BitTorrentHelper/port')
+                : this.portFilePath
 
         try {
             fs.accessSync(portFilePath)
         } catch (error) {
             log.warn(`${portFilePath} not found, retry in 5 seconds...`)
-            await new Promise(resolve => setTimeout(resolve, 5000))
+            await new Promise((resolve) => setTimeout(resolve, 5000))
             return this.getPort()
         }
 
         const portFileData = fs.readFileSync(portFilePath, 'UTF-8')
-        const port = parseInt(portFileData)  
-        
+        const port = parseInt(portFileData)
+
         this.port = port
 
         return port
     }
 
     getApiUrl = async () => {
-        const url = new URL(this.apiUrlWithoutPort)
+        const url = new URL(this.url)
         url.port = await this.getPort()
         return url
     }
@@ -64,7 +65,7 @@ module.exports = new class BitTorrentSpeed {
         } catch (error) {
             if (error.code === 'ECONNREFUSED') {
                 log.warn(`${url.href} not responding, retry in 5 seconds...`)
-                await new Promise(resolve => setTimeout(resolve, 5000))
+                await new Promise((resolve) => setTimeout(resolve, 5000))
                 return this.authorizedRequest(url, options)
             } else {
                 throw error
@@ -77,7 +78,7 @@ module.exports = new class BitTorrentSpeed {
         url.pathname += 'password'
         await this.authorizedRequest(url, {
             method: 'POST',
-            body: Buffer.from(password)
+            body: Buffer.from(password),
         })
         return password
     }
@@ -96,7 +97,7 @@ module.exports = new class BitTorrentSpeed {
         url.pathname += 'store/spend'
         return this.authorizedRequest(url, {
             method: 'POST',
-            body: Buffer.from('false')
+            body: Buffer.from('false'),
         })
     }
 }

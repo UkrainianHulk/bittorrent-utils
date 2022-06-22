@@ -1,27 +1,21 @@
 module.exports = {
     // Transfer attempt interval in seconds. Set this to 0 to disable
     // Интервал между попытками пеевода. Установите 0 чтобы отключить
-    AUTOTRANSFER_INTERVAL_SECONDS: 1,
+    AUTOTRANSFER_INTERVAL_SECONDS: 0,
     // Array of payer's SPEED or BTFS private keys or string 'auto' - makes app to autodetect local ip-app wallet private key
     // Массив приватных ключей (SPEED или BTFS) плательщика или строка 'auto' - автоматическое определение приватного ключа локального in-app кошелька
     AUTOTRANSFER_FROM: [
         '865b2084abd1909b1a1edc836da8edc64f74239a34d04bc2b6ef94c2016a8c45',
-        'ad861e2b1876c7071fec870e02e6b1527d443fd45d05aceeb64e4236b7a1b7eb'
+        'ad861e2b1876c7071fec870e02e6b1527d443fd45d05aceeb64e4236b7a1b7eb',
     ],
-    AUTOTRANSFER_TO: 'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
+    AUTOTRANSFER_TO:
+        'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
     AUTOTRANSFER_HISTORY_AGE_HOURS: 24,
 
-    CLIENTS: [{
-        GUI_URL: 'http://localhost:8080/gui/',   
-        USERNAME: 'yourusername',                
-        PASSWORD: 'yourpassword',  
-        IPFILTER_FILE_PATH: 'auto',                 // for local client only, только для локального клиента
-        BITTORRENT_SPEED_PORT_FILE_PATH: 'auto',    // for local client only, только для локального клиента
-    }, {
-        GUI_URL: 'https://yourdomain.com/gui/',
-        USERNAME: 'yourusername',
-        PASSWORD: 'yourpassword',
-    }],
+    GUI_URL: 'http://localhost:8080/gui/',
+    GUI_USERNAME: 'yourusername',
+    GUI_PASSWORD: 'yourpassword',
+    BITTORRENT_SPEED_PORT_FILE_PATH: 'auto',
 
     AUTOREMOVE_INTERVAL_SECONDS: 0,
     AUTOREMOVE_TORRENTS_MAX_AMOUNT: 0,
@@ -29,6 +23,13 @@ module.exports = {
     AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB: 0,
     AUTOREMOVE_MIN_SEEDING_TIME_HOURS: 0,
     AUTOREMOVE_PREVENT_REMOVING: false,
+
+    PEERS_FILTER_INTERVAL_SECONDS: 0,
+    PEERS_FILTER_RESET_INTERVAL_MINUTES: 5,
+    PEERS_FILTER_IPFILTER_FILE_PATH: 'auto',
+    PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
+    PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
+    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.3',
 
     AUTOCONFIG_ENABLE: false,
     AUTOCONFIG_SETTINGS: {
@@ -50,7 +51,7 @@ module.exports = {
         dir_autoload_flag: false,
         dir_autoload_delete: true,
         dir_autoload: 'path/to/autoload/dir',
-        dir_active_download_flag: false, 
+        dir_active_download_flag: false,
         dir_active_download: 'path/to/downloads/dir',
         'rss.update_interval': 5,
         'bt.allow_same_ip': false,
@@ -60,15 +61,9 @@ module.exports = {
         'bt.transp_disposition': 31,
         'peer.disconnect_inactive_interval': 100,
         'offers.sponsored_torrent_offer_enabled': false,
-        'offers.left_rail_offer_enabled': false
+        'offers.left_rail_offer_enabled': false,
     },
 
-    PEERS_FILTER_INTERVAL_SECONDS: 0,
-    PEERS_FILTER_RESET_INTERVAL_MINUTES: 5,
-    PEERS_FILTER_BITTORRENT_VERSION: '>=7.10.5',
-    PEERS_FILTER_UTORRENT_VERSION: '>=3.5.5',
-    PEERS_FILTER_LIBTORRENT_VERSION: '>=1.2.3',
-
     DEV_FEE_PERCENT: 1,
-    LOG_LEVEL: 2
+    LOG_LEVEL: 2,
 }
