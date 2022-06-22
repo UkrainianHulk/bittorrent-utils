@@ -23,11 +23,9 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Windows
 
--   Install Node.js if not installed already. Recommended version is [v13.14.0](https://nodejs.org/download/release/v13.14.0/)
+-   Install [Node.js](https://nodejs.org/en/) if not installed already. Recommended version is [v16.15.1](https://nodejs.org/download/release/v16.15.1/)
 
-    > **NOTE:** Node.js v13.14.0 is used for compatibility with Windows 7 only, in other cases you can try newer versions of Node.js
-
--   [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip script or use git:
+-   [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip this repository or use git clone:
 
     ```
     git clone https://github.com/UkrainianHulk/bittorrent-utils
@@ -65,16 +63,8 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ## Setup
 
-### Scenarios
-
-There are two scenarios for using the script:
-
-1. Local script instance for each client
-    - all script features can be set up
-2. Remote script instance for multiple clients
-    - peers filter won't work
-
-Сonsidering these options, you can choose the one that suits you or even combine them. For example, you can configure local scripts to block peers and torrents removal, while remote script can be configured for centralized configuration management and in-app BTT collection.
+This script is designed as one instance per BitTorrent/uTorrent client.
+However you can setup autotransfer from multiple wallets.
 
 ### Settings
 
@@ -82,10 +72,10 @@ The script provides two config files:
 
 1. User config file location: `bittorrent-utils/config/user.js`
     - the settings from this file overwrite the default settings from the `default.js` file
-    - edit this file to configure your instance of script
+    - **edit `user.js`** file to configure your instance of script
 2. Default config file location: `bittorrent-utils/config/default.js`
     - a file with the default settings and their description
-    - avoid editing this file in favor of editing `user.js` file
+    - **avoid editing `default.js`** file in favor of editing `user.js` file
 
 ## FAQ
 
