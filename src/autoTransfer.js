@@ -1,15 +1,24 @@
 const config = require('config')
 const fetch = require('node-fetch')
+const { networkInterfaces } = require('os')
 // eslint-disable-next-line no-unused-vars
 const colors = require('colors')
+const { InfluxDB, Point } = require('@influxdata/influxdb-client')
 const inAppTransfer = require('./libs/inAppTransfer.js')
 const ledgerRPC = require('./libs/ledgerRPC.js')
 const client = require('./client.js')
 const { UBTTtoBTT, iteration } = require('./libs/utils.js')
 const log = require('./libs/log.js')
 
+const intervalSeconds = config.get('AUTOTRANSFER_INTERVAL_SECONDS')
+const payersKeys = config.get('AUTOTRANSFER_FROM')
 const recipientKey = config.get('AUTOTRANSFER_TO')
 const historyAgeHours = config.get('AUTOTRANSFER_HISTORY_AGE_HOURS')
+const influxDbEnabled = config.get('AUTOTRANSFER_INFLUXDB_ENABLED')
+const influxDbUrl = config.get('AUTOTRANSFER_INFLUXDB_URL')
+const influxDbToken = config.get('AUTOTRANSFER_INFLUXDB_TOKEN')
+const influxDbOrg = config.get('AUTOTRANSFER_INFLUXDB_ORG')
+const influxDbBucket = config.get('AUTOTRANSFER_INFLUXDB_BUCKET')
 
 const getBttPrice = async () => {
     const response = await fetch(
@@ -22,14 +31,15 @@ const getBttPrice = async () => {
 
 const getPayers = async () => {
     try {
-        const configValue = config.get('AUTOTRANSFER_FROM')
-        if (configValue === 'auto') {
+        if (payersKeys === 'auto') {
             const payer = await client.bitTorrentSpeed.getPrivateKey()
             log.info(`Local client private key: ${payer}`)
             return [payer]
-        } else if (typeof configValue === 'string') {
-            return [configValue]
-        } else return configValue
+        } else if (typeof payersKeys === 'string') {
+            return [payersKeys]
+        } else if (Array.isArray(payersKeys)) {
+            return payersKeys
+        } else throw new Error('"AUTOTRANSFER_FROM" setting must be a string or an array')
     } catch (error) {
         log.error(error)
         return []
@@ -83,6 +93,19 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
             paymentAmount: transferResult.paymentAmount,
             timestamp: Date.now(),
         })
+
+        if (influxDbEnabled) {
+            const ip = Object.values(networkInterfaces()).flat().find((i) => i?.family === 'IPv4' && !i?.internal)?.address;
+            const client = new InfluxDB({ url: influxDbUrl, token: influxDbToken })
+            const writeApi = client.getWriteApi(influxDbOrg, influxDbBucket)
+            const point = new Point(ip).floatField('income', UBTTtoBTT(transferResult.paymentAmount))
+            
+            writeApi.writePoint(point)
+
+            await writeApi.close()
+
+            log.debug('Transfer amount sent to influxDB')
+        }
 
         const recipientBalance = (
             await ledgerRPC.createAccount({
@@ -150,7 +173,7 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
 const autoTransferIteration = (...args) =>
     iteration(
         autoTransfer,
-        config.get('AUTOTRANSFER_INTERVAL_SECONDS') * 1000,
+        intervalSeconds * 1000,
         ...args
     )
 

@@ -10,12 +10,14 @@ const {
     setStringLength,
 } = require('./libs/utils.js')
 
-const torrentsMaxAmount = config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')
-const sizeQuotaPerDriveGB = config.get('AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB')
-const torrentMaxSizeGB = config.get('AUTOREMOVE_TORRENT_MAX_SIZE_GB')
-const minSeedingTimeHours = config.get('AUTOREMOVE_MIN_SEEDING_TIME_HOURS')
-const preventRemoving = config.get('AUTOREMOVE_PREVENT_REMOVING')
+
 const intervalSeconds = config.get('AUTOREMOVE_INTERVAL_SECONDS')
+const torrentsMaxAmount = config.get('AUTOREMOVE_TORRENTS_MAX_AMOUNT')
+const torrentMaxSizeGB = config.get('AUTOREMOVE_TORRENT_MAX_SIZE_GB')
+const sizeQuotaPerDriveGB = config.get('AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB')
+const minSeedingTimeHours = config.get('AUTOREMOVE_MIN_SEEDING_TIME_HOURS')
+const deduplication = config.get('AUTOREMOVE_DEDUPLICATION')
+const preventRemoving = config.get('AUTOREMOVE_PREVENT_REMOVING')
 
 const getListsPerDrive = (torrentsList) =>
     torrentsList.reduce((acc, torrent) => {
@@ -69,16 +71,34 @@ const autoRemove = async (client) => {
     const torrentsList = await client.bitTorrent.getList()
     const sortedList = torrentsList.sort((a, b) => b.added - a.added)
     const removalList = []
+    const dedupeList = []
 
     for (const torrent of torrentsList) {
         torrent.seedingTime =
             torrent.completed && Date.now() - torrent.completed * 1000
     }
 
+    if (deduplication) {
+        for (let i = sortedList.length - 1; i >= 0; i--) {
+            const listItem = sortedList[i]
+            const nextItems = sortedList.slice(0, i)
+            const duplicate = nextItems.find(item => item.name === listItem.name)
+            // Splice used to remove torrents from list and make them unaccessible for other fileters
+            log.info(`Removing duplicated torrent: ${setStringLength(
+                listItem.name,
+                60
+            )}`)
+            if (duplicate) dedupeList.push(sortedList.splice(i--, 1)[0])
+        }
+        const dedupeHashList = dedupeList.map(item => item.hash)
+        if (!preventRemoving) await client.bitTorrent.deleteTorrents(dedupeHashList, false)
+    }
+
     if (torrentMaxSizeGB) {
         for (let i = 0; i < sortedList.length; i++) {
             const torrent = sortedList[i]
             if (torrent.size > GBtoBytes(torrentMaxSizeGB)) {
+                // Splice used to remove torrents from list and make them unaccessible for other fileters
                 const exceedTorrent = sortedList.splice(i--, 1)[0]
                 exceedTorrent.removeReason = 'MAX_SIZE'
                 removalList.push(exceedTorrent)

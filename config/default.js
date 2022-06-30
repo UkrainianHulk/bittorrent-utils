@@ -11,6 +11,11 @@ module.exports = {
     AUTOTRANSFER_TO:
         'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
     AUTOTRANSFER_HISTORY_AGE_HOURS: 24,
+    AUTOTRANSFER_INFLUXDB_ENABLED: false,
+    AUTOTRANSFER_INFLUXDB_URL: 'http://localhost:8086',
+    AUTOTRANSFER_INFLUXDB_TOKEN: 'influxdb-token',
+    AUTOTRANSFER_INFLUXDB_ORG: 'bittorrent-utils',
+    AUTOTRANSFER_INFLUXDB_BUCKET: 'bittorrent-utils',
 
     GUI_URL: 'http://localhost:8080/gui/',
     GUI_USERNAME: 'yourusername',
@@ -22,6 +27,7 @@ module.exports = {
     AUTOREMOVE_TORRENT_MAX_SIZE_GB: 0,
     AUTOREMOVE_SIZE_QUOTA_PER_DRIVE_GB: 0,
     AUTOREMOVE_MIN_SEEDING_TIME_HOURS: 0,
+    AUTOREMOVE_DEDUPLICATION: true,
     AUTOREMOVE_PREVENT_REMOVING: false,
 
     PEERS_FILTER_INTERVAL_SECONDS: 0,
