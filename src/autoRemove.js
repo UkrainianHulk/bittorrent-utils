@@ -71,7 +71,6 @@ const autoRemove = async (client) => {
     const torrentsList = await client.bitTorrent.getList()
     const sortedList = torrentsList.sort((a, b) => b.added - a.added)
     const removalList = []
-    const dedupeList = []
 
     for (const torrent of torrentsList) {
         torrent.seedingTime =
@@ -79,10 +78,12 @@ const autoRemove = async (client) => {
     }
 
     if (deduplication) {
+        const dedupeHashList = []
+
         for (let i = sortedList.length - 1; i >= 0; i--) {
             const listItem = sortedList[i]
             const nextItems = sortedList.slice(0, i)
-            const duplicate = nextItems.find(item => item.path === listItem.path)
+            const duplicate = nextItems.find(item => item.name === listItem.name)
 
             if (duplicate) {
                 log.info(`Removing duplicated torrent: ${setStringLength(
@@ -90,11 +91,12 @@ const autoRemove = async (client) => {
                     60
                 )}`)
                 // Splice used to remove torrents from list and make them unaccessible for other fileters
-                dedupeList.push(sortedList.splice(i--, 1)[0])
+                sortedList.splice(i--, 1)
+                dedupeHashList.push(duplicate.hash)
             }
         }
-        const dedupeHashList = dedupeList.map(item => item.hash)
-        if (!preventRemoving) await client.bitTorrent.deleteTorrents(dedupeHashList, false)
+
+        if (dedupeHashList.length && !preventRemoving) await client.bitTorrent.deleteTorrents(dedupeHashList, false)
     }
 
     if (torrentMaxSizeGB) {
