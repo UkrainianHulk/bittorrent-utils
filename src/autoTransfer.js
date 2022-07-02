@@ -14,7 +14,7 @@ const intervalSeconds = config.get('AUTOTRANSFER_INTERVAL_SECONDS')
 const payersKeys = config.get('AUTOTRANSFER_FROM')
 const recipientKey = config.get('AUTOTRANSFER_TO')
 const historyAgeHours = config.get('AUTOTRANSFER_HISTORY_AGE_HOURS')
-const influxDbEnabled = config.get('AUTOTRANSFER_INFLUXDB_ENABLED')
+const influxdbEnabled = config.get('AUTOTRANSFER_INFLUXDB_ENABLED')
 const influxDbUrl = config.get('AUTOTRANSFER_INFLUXDB_URL')
 const influxDbToken = config.get('AUTOTRANSFER_INFLUXDB_TOKEN')
 const influxDbOrg = config.get('AUTOTRANSFER_INFLUXDB_ORG')
@@ -94,17 +94,20 @@ const autoTransfer = async (payerPrivateKey, payerIndex, payers) => {
             timestamp: Date.now(),
         })
 
-        if (influxDbEnabled) {
+        if (influxdbEnabled) {
             const ip = Object.values(networkInterfaces()).flat().find((i) => i?.family === 'IPv4' && !i?.internal)?.address;
             const client = new InfluxDB({ url: influxDbUrl, token: influxDbToken })
             const writeApi = client.getWriteApi(influxDbOrg, influxDbBucket)
-            const point = new Point(ip).floatField('income', UBTTtoBTT(transferResult.paymentAmount))
+            const point = new Point('BTT')
+                .tag('ip', ip)
+                .floatField('amount', UBTTtoBTT(transferResult.paymentAmount))
+                .timestamp(new Date())
             
             writeApi.writePoint(point)
 
-            await writeApi.close()
+            await writeApi.close().catch((error) => log.error(error))
 
-            log.debug('Transfer amount sent to influxDB')
+            log.debug('Transfer amount sent to influxdb')
         }
 
         const recipientBalance = (
