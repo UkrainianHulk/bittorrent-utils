@@ -1,58 +1,30 @@
-const path = require('path')
-const config = require('config')
 // eslint-disable-next-line no-unused-vars
-const colors = require('colors')
-const log = require('loglevel')
-const parentModule = require('parent-module')
+import colors from 'colors'
+import config from './config.js'
+import log from 'loglevel'
 
-log.setDefaultLevel(config.get('LOG_LEVEL'))
+const { LOG_LEVEL } = config
 
-const getTimestamp = () =>
-    `[${
-        new Date().toLocaleString('ru', {
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-        }).yellow
-    }]`
+log.setDefaultLevel(LOG_LEVEL)
 
-module.exports.trace = (msg, caller) =>
-    log.trace(
-        getTimestamp() +
-            ` (${'TRACE'.gray}) [${
-                path.parse(caller || parentModule()).name
-            }] ` +
-            msg
-    )
-module.exports.debug = (msg, caller) =>
-    log.debug(
-        getTimestamp() +
-            ` (${'DEBUG'.gray}) [${
-                path.parse(caller || parentModule()).name
-            }] ` +
-            msg
-    )
-module.exports.info = (msg, caller) =>
-    log.info(
-        getTimestamp() +
-            ` (${'INFO'.brightBlue}) [${
-                path.parse(caller || parentModule()).name
-            }] ` +
-            msg
-    )
-module.exports.warn = (msg, caller) =>
-    log.warn(
-        getTimestamp() +
-            ` (${'WARN'.brightYellow}) [${
-                path.parse(caller || parentModule()).name
-            }] ` +
-            msg
-    )
-module.exports.error = (msg, caller) =>
-    log.error(
-        getTimestamp() +
-            ` (${'ERROR'.brightRed}) [${
-                path.parse(caller || parentModule()).name
-            }] ` +
-            msg
-    )
+const getTimestampString = () =>
+    new Date().toLocaleString('ru', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    }).yellow
+
+export default class logger {
+    static trace = (msg) => log.trace(getTimestampString(), 'TRACE'.gray, msg)
+
+    static debug = (msg) => log.debug(getTimestampString(), 'DEBUG'.gray, msg)
+
+    static info = (msg) =>
+        log.info(getTimestampString(), 'INFO'.brightBlue, msg)
+
+    static warn = (msg) =>
+        log.warn(getTimestampString(), 'WARN'.brightYellow, msg)
+
+    static error = (msg) =>
+        log.error(getTimestampString(), 'ERROR'.brightRed, msg)
+}

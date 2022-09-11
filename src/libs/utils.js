@@ -1,16 +1,24 @@
-const process = require('process')
-const log = require('./log.js')
+export function numberToPercent(number) {
+    return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
+}
 
-module.exports.isProduction =
-    process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'user'
-module.exports.numberToPercent = (number) =>
-    (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
-module.exports.UBTTtoBTT = (amount) => amount / 1000000
-module.exports.BTTtoUBTT = (amount) => amount * 1000000
-module.exports.bytesToGB = (bytes) => bytes / 1024 / 1024 / 1024
-module.exports.GBtoBytes = (GB) => GB * 1024 * 1024 * 1024
+export function UBTTtoBTT(amount) {
+    return amount / 1000
+}
 
-module.exports.msToDHMS = (time) => {
+export function BTTtoUBTT(amount) {
+    return amount * 1000
+}
+
+export function bytesToGB(bytes) {
+    return bytes / 1024 / 1024 / 1024
+}
+
+export function GBtoBytes(GB) {
+    return GB * 1024 * 1024 * 1024
+}
+
+export function msToDHMS(time) {
     const SEC = 1e3
     const MIN = SEC * 60
     const HOUR = MIN * 60
@@ -23,26 +31,8 @@ module.exports.msToDHMS = (time) => {
     return `${time < 0 ? '-' : ''}${d}d ${h}h ${m}m ${s}s`
 }
 
-module.exports.setStringLength = (string, maxLength) =>
-    string.length > maxLength
+export function setStringLength(string, maxLength) {
+    return string.length > maxLength
         ? string.substring(0, maxLength - 3) + '...'
         : string.padEnd(maxLength, ' ')
-
-module.exports.iteration = async function (func, delay, ...args) {
-    if (!module.exports.isProduction)
-        try {
-            return await func(...args)
-        } catch (error) {
-            log.error(error.stack, func.name)
-        }
-    else
-        try {
-            await func(...args)
-        } catch (error) {
-            log.error(error.stack, func.name)
-        } finally {
-            await new Promise((resolve) => setTimeout(resolve, delay))
-            // eslint-disable-next-line no-unsafe-finally
-            return await module.exports.iteration(func, delay, ...args)
-        }
 }

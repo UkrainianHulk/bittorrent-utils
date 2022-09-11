@@ -1,76 +1,78 @@
-const crypto = require('crypto')
-const secp256k1 = require('secp256k1')
-const createKeccakHash = require('keccak')
-const base58 = require('b58')
-const protobuf = require('protobufjs')
-const keysProto = protobuf.loadSync('./protos/keys.proto')
-const PrivateKeyMessageType = keysProto.lookupType('PrivateKey')
+import crypto from 'crypto'
+import secp256k1 from 'secp256k1'
+import createKeccakHash from 'keccak'
+import base58 from 'b58'
 
-class PrivateKey {
-    constructor(key) {
-        // [BTFS] BASE64 string -> PROTOBUF SERIALIZED buffer -> KEY buffer
-        if (key.length === 48)
-            this.private = PrivateKeyMessageType.decode(
-                Buffer.from(key, 'base64')
-            ).Data
-        // [SPEED] HEX string -> KEY buffer
-        else if (key.length === 64) this.private = Buffer.from(key, 'hex')
-        else throw new Error(`Private key ${key} not recognized`)
-        if (!secp256k1.privateKeyVerify(this.private))
-            throw new Error(`Private key ${key} verification failed`)
+export class PrivateKey {
+    #string
+    #buffer
+    #public
 
-        this.serializedPrivate = PrivateKeyMessageType.encode({
-            Type: 2,
-            Data: this.private,
-        }).finish()
-        this.public = new PublicKey(this.private)
-        this.source = key
+    get string() { return this.#string }
+    get buffer() { return this.#buffer }
+    get public() { return this.#public }
+
+    constructor(privateKeyString) {
+        this.#string = privateKeyString
+        this.#buffer = Buffer.from(privateKeyString, 'hex')
+        if (!secp256k1.privateKeyVerify(this.#buffer))
+            throw new Error(`Private key ${privateKeyString} verification failed`)
+        const publicKeyString = PrivateKey.privateKeyStringToPublicKeyString(privateKeyString)
+        this.#public = new PublicKey(publicKeyString)
+    }
+
+    static privateKeyStringToPublicKeyString(privateKeyString) {
+        const privateKeyBuffer = Buffer.from(privateKeyString, 'hex');
+        if (!secp256k1.privateKeyVerify(privateKeyBuffer))
+            throw new Error(`Private key ${privateKeyString} verification failed`)
+        const compressed = Buffer.from(secp256k1.publicKeyCreate(privateKeyBuffer))
+        const uncompressed = Buffer.from(secp256k1.publicKeyConvert(compressed, false))
+        return uncompressed.toString('base64')
     }
 
     hashAndSign(message) {
-        const messageHash = crypto.createHash('sha256').update(message).digest()
+        const messageHash = crypto
+            .createHash('sha256')
+            .update(message)
+            .digest()
         const signature = secp256k1.ecdsaSign(
             messageHash,
-            this.private
+            this.#buffer
         ).signature
-        if (
-            !secp256k1.ecdsaVerify(
-                signature,
-                messageHash,
-                this.public.uncompressedUint8Array
-            )
+        const verified = secp256k1.ecdsaVerify(
+            signature,
+            messageHash,
+            this.#public.uncompressedUint8Array
         )
-            throw new Error(`Signature verification failed`)
+        if (!verified) throw new Error(`Signature verification failed`)
         return secp256k1.signatureExport(signature)
     }
 }
 
-class PublicKey {
-    constructor(key) {
-        if (typeof key === 'string' && key.length === 88) {
-            this.uncompressed = Buffer.from(key, 'base64')
-            this.compressed = Buffer.from(
-                secp256k1.publicKeyConvert(this.uncompressed, true)
-            )
-        } else if (Buffer.isBuffer(key) && key.length === 32) {
-            this.compressed = Buffer.from(secp256k1.publicKeyCreate(key))
-            this.uncompressed = Buffer.from(
-                secp256k1.publicKeyConvert(this.compressed, false)
-            )
-        }
-        if (!secp256k1.publicKeyVerify(this.compressed))
-            throw new Error(`Public key ${key} verification failed`)
-        else if (!secp256k1.publicKeyVerify(this.uncompressed))
-            throw new Error(`Public key ${key} verification failed`)
-        this.uncompressedUint8Array = new Uint8Array(this.uncompressed)
-        this.source = key
-        this.tronAdress = PublicKey.publicKeyToTronAdress(this)
+export class PublicKey {
+    #string
+    #bufferCompressed
+    #bufferUncompressed
+    #uint8ArrayUncompressed
+
+    get string() { return this.#string }
+    get bufferCompressed() { return this.#bufferCompressed }
+    get bufferUncompressed() { return this.#bufferUncompressed }
+    get uncompressedUint8Array() { return this.#uint8ArrayUncompressed }
+    
+    constructor(publicKeyString) {
+        this.#string = publicKeyString
+        this.#bufferUncompressed = Buffer.from(publicKeyString, 'base64')
+        if (!secp256k1.publicKeyVerify(this.#bufferUncompressed))
+            throw new Error(`Public key ${publicKeyString} verification failed`)
+        this.#bufferCompressed = Buffer.from(secp256k1.publicKeyConvert(this.#bufferUncompressed, true))
+        if (!secp256k1.publicKeyVerify(this.#bufferCompressed))
+            throw new Error(`Public key ${publicKeyString} verification failed`)
+        this.#uint8ArrayUncompressed = new Uint8Array(this.#bufferUncompressed)
     }
 
-    static publicKeyToTronAdress(publicKeyObject) {
-        if (!(publicKeyObject instanceof PublicKey))
-            throw new Error(`Public key must be instance of PublicKey class`)
-        const P = publicKeyObject.uncompressed.slice(1, 65)
+    toTronAdress() {
+        const P = this.#bufferUncompressed.slice(1, 65)
         const slicedKeccak256 = createKeccakHash('keccak256')
             .update(P)
             .digest()
@@ -82,22 +84,4 @@ class PublicKey {
         const tronAdress = base58.encode(Buffer.concat([H, h2.slice(0, 4)]))
         return tronAdress
     }
-}
-
-function processKey(key) {
-    switch (key.length) {
-        case 48:
-        case 64:
-            return new PrivateKey(key)
-        case 88:
-            return new PublicKey(key)
-        default:
-            throw new Error(`Key ${key} not recognized`)
-    }
-}
-
-module.exports = {
-    PrivateKey,
-    PublicKey,
-    processKey,
 }
