@@ -16,7 +16,7 @@ export default {
         '/BitTorrentHelper/port'
     ),
     BITTORRENT_SPEED_PASSWORD: 'password',
-    BITTORRENT_SPEED_PASSWORD_FORCED: false,
+    BITTORRENT_SPEED_PASSWORD_FORCED: true,
 
     AUTOTRANSFER_ENABLED: false,
     AUTOTRANSFER_FROM: 'local',

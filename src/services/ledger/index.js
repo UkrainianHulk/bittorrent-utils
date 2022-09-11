@@ -40,8 +40,8 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
         const recipientPublicKeyObject = new PublicKey(recipientPublicKeyStr)
 
         const transferRequest = {
-            payer: { key: payerPrivateKeyObject.public.uncompressed },
-            recipient: { key: recipientPublicKeyObject.uncompressed },
+            payer: { key: payerPrivateKeyObject.public.bufferUncompressed },
+            recipient: { key: recipientPublicKeyObject.bufferUncompressed },
             amount,
         }
 
@@ -62,6 +62,6 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
 
         ledgerClient.Transfer(request, function (error, response) {
             if (error) reject(error)
-            else resolve(response)
+            else resolve(UBTTtoBTT(response.balance))
         })
     })

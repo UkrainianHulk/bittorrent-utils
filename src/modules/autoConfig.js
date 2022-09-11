@@ -17,11 +17,9 @@ export async function start() {
     try {
         await autoConfig()
     } catch (error) {
-        log.error(error.message)
+        log.error(`Autoconfig: ${error.message}`)
         log.debug(error)
-        log.warn(
-            'Automatic configuration failed due to the error above. Will retry in 5 sec...'
-        )
+        log.warn('Will retry automatic configuration in 5 sec...')
         await setTimeout(5000)
         await start()
     }

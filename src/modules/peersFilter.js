@@ -87,7 +87,7 @@ export async function start() {
     try {
         await peersFilter()
     } catch (error) {
-        log.error(error.message)
+        log.error(`Peers filter: ${error.message}`)
         log.debug(error)
     } finally {
         await setTimeout(PEERS_FILTER_INTERVAL_SECONDS * 1000)

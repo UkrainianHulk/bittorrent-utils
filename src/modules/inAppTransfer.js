@@ -34,11 +34,11 @@ export default async function ({
             amount: devFeeAmount,
         }))
 
-        const result = await Promise.all(transactions)
+        const newBalances = await Promise.all(transactions)
 
         return {
             paymentAmount,
-            result,
+            newBalance: newBalances[0],
         }
     }
 

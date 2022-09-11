@@ -63,32 +63,37 @@ async function autoRemove() {
 
     const duplicationListHashes = duplicationList.map((torrent) => torrent.hash)
     const removalListHashes = removalList.map((torrent) => torrent.hash)
+    const generalRemovalList = removalList.concat(duplicationList)
+
+    if (!generalRemovalList.length) return log.debug(`No torrents to remove`)
 
     log.info('Torrents removal list:')
 
-    removalList.concat(duplicationList).forEach((torrent) => {
+    generalRemovalList.forEach((torrent) => {
         const name = setStringLength(torrent.name, 50)
         const size = bytesToGB(torrent.size).toFixed(2) + ' GB'
         const ratio = (torrent.ratio / 1000).toFixed(2)
         const status = torrent.status
         const added = msToDHMS(Date.now() - torrent.added * 1000)
-        log.info([name, size, ratio, status, added].join(' | '))
+        log.info([ name, size, ratio, status, added ].join(' | '))
     })
 
-    if (!AUTOREMOVE_PREVENT_REMOVING) {
-        await Promise.all(
-            bitTorrent.deleteTorrents(duplicationListHashes),
-            bitTorrent.deleteTorrents(removalListHashes)
-        )
-        log.info('Torrents removed')
-    } else log.info('Torrents removing prevented')
+    if (AUTOREMOVE_PREVENT_REMOVING)
+        return log.info('Torrents removing prevented')
+
+    await Promise.all([
+        bitTorrent.deleteTorrents(duplicationListHashes),
+        bitTorrent.deleteTorrents(removalListHashes)
+    ])
+
+    log.info('Torrents removed')
 }
 
 export async function start() {
     try {
         await autoRemove()
     } catch (error) {
-        log.error(error.message)
+        log.error(`Autoconfig: ${error.message}`)
         log.debug(error)
     } finally {
         await setTimeout(AUTOREMOVE_INTERVAL_SECONDS * 1000)

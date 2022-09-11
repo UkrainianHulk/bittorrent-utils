@@ -1,3 +1,4 @@
+import 'colors'
 import { setTimeout } from 'timers/promises'
 import fetch from 'node-fetch'
 import log from '../libs/log.js'
@@ -9,12 +10,12 @@ const {
     AUTOTRANSFER_TO,
     AUTOTRANSFER_FROM,
     AUTOTRANSFER_INTERVAL_SECONDS,
-    AUTOTRANSFER_HISTORY_AGE_HOURS,
-    AUTOTRANSFER_INFLUXDB_ENABLED,
-    AUTOTRANSFER_INFLUXDB_URL,
-    AUTOTRANSFER_INFLUXDB_TOKEN,
-    AUTOTRANSFER_INFLUXDB_ORGANISATION,
-    AUTOTRANSFER_INFLUXDB_BUCKET
+    // AUTOTRANSFER_HISTORY_AGE_HOURS,
+    // AUTOTRANSFER_INFLUXDB_ENABLED,
+    // AUTOTRANSFER_INFLUXDB_URL,
+    // AUTOTRANSFER_INFLUXDB_TOKEN,
+    // AUTOTRANSFER_INFLUXDB_ORGANISATION,
+    // AUTOTRANSFER_INFLUXDB_BUCKET
 } = config
 
 const getBttPrice = async () => {
@@ -34,24 +35,33 @@ async function getPayerPrivateKey() {
 
 async function autoTransfer() {
     const payerPrivateKeyStr = await getPayerPrivateKey()
-    try {
-        const result = await inAppTransfer({
+    const [
+        price,
+        { paymentAmount, newBalance }
+    ] = await Promise.all([
+        getBttPrice(),
+        inAppTransfer({
             payerPrivateKeyStr,
             recipientPublicKeyStr: AUTOTRANSFER_TO,
             amount: 'all'
         })
-        log.debug(result)
-    } catch (error) {
-        if (error.message === 'Empty balance') return
-        throw error
-    }
+    ])
+    const equivalent = price * newBalance
+    const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT').brightGreen
+    const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTT').brightMagenta
+    const newBalanceStr = (newBalance.toLocaleString() + ' BTT').brightMagenta
+
+    log.info(`${paymentAmountStr} -> ${newBalanceStr} (${equivalentStr})`)
 }
 
 export async function start() {
     try {
         await autoTransfer()
     } catch (error) {
-        log.error(error.message)
+        if (error.message === 'Empty balance') 
+            return log.debug('No balance to transfer')
+            
+        log.error(`Autotransfer: ${error.message}`)
         log.debug(error)
     } finally {
         await setTimeout(AUTOTRANSFER_INTERVAL_SECONDS * 1000)
