@@ -2,7 +2,7 @@ import { loadPackageDefinition, credentials } from '@grpc/grpc-js'
 import protoLoader from '@grpc/proto-loader'
 import protobuf from 'protobufjs'
 import { PrivateKey, PublicKey } from '../../libs/keys.js'
-import { UBTTtoBTT } from '../../libs/utils.js'
+import { UBTTtoBTT, BTTtoUBTT } from '../../libs/utils.js'
 
 const grpcAdress = 'ledger.bt.co:443'
 const ledgerProtoPath = './src/services/Ledger/protos/ledger.proto'
@@ -42,7 +42,7 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
         const transferRequest = {
             payer: { key: payerPrivateKeyObject.public.bufferUncompressed },
             recipient: { key: recipientPublicKeyObject.bufferUncompressed },
-            amount,
+            amount: BTTtoUBTT(amount),
         }
 
         const TransferRequestMessageType = ledgerProto

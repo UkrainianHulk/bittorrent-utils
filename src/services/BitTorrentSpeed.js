@@ -3,16 +3,18 @@ import { URL } from 'url'
 import fetch from 'node-fetch'
 
 export default class BitTorrentSpeed {
-    constructor({ password, portFilePath }) {
+    constructor({ password, passwordForced, portFilePath }) {
         const portFileData = fs.readFileSync(portFilePath)
         const port = parseInt(portFileData)
         this.#url = `http://127.0.0.1:${port}/api/`
         this.#password = password
+        this.#passwordForced = passwordForced
     }
 
     #url
     #token
     #password
+    #passwordForced
     #privateKey
 
     async #authorize() {
@@ -32,6 +34,7 @@ export default class BitTorrentSpeed {
     }
 
     async resetPassword(newPassword) {
+        if (!this.#passwordForced) return
         const url = new URL('password', this.#url)
         await this.#authorizedRequest(url, {
             method: 'POST',
@@ -41,7 +44,12 @@ export default class BitTorrentSpeed {
         return this.#password
     }
 
+    async resetAuth() {
+        this.#token = null
+    }
+
     async getPrivateKey() {
+        await this.resetPassword(this.#password)
         const url = new URL('private_key', this.#url)
         url.searchParams.set('pw', this.#password)
         this.#privateKey = await this.#authorizedRequest(url)

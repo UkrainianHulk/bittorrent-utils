@@ -9,10 +9,8 @@ const {
 
 const bitTorrentSpeed = new BitTorrentSpeed({
     password: BITTORRENT_SPEED_PASSWORD,
+    passwordForced: BITTORRENT_SPEED_PASSWORD_FORCED,
     portFilePath: BITTORRENT_SPEED_PORT_FILE_PATH,
 })
-
-if (BITTORRENT_SPEED_PASSWORD_FORCED)
-    bitTorrentSpeed.resetPassword(BITTORRENT_SPEED_PASSWORD)
 
 export default bitTorrentSpeed

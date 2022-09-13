@@ -34,12 +34,9 @@ export default async function ({
             amount: devFeeAmount,
         }))
 
-        const newBalances = await Promise.all(transactions)
+        await Promise.all(transactions)
 
-        return {
-            paymentAmount,
-            newBalance: newBalances[0],
-        }
+        return paymentAmount
     }
 
     if (payerBalance <= 0) throw new Error('Empty balance')

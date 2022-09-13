@@ -5,6 +5,7 @@ import log from '../libs/log.js'
 import config from '../libs/config.js'
 import bitTorrentSpeed from '../services/bitTorrentSpeedAccess.js'
 import inAppTransfer from './inAppTransfer.js'
+import { getBalance } from '../services/ledger/index.js'
 
 const {     
     AUTOTRANSFER_TO,
@@ -37,7 +38,7 @@ async function autoTransfer() {
     const payerPrivateKeyStr = await getPayerPrivateKey()
     const [
         price,
-        { paymentAmount, newBalance }
+        paymentAmount
     ] = await Promise.all([
         getBttPrice(),
         inAppTransfer({
@@ -46,10 +47,11 @@ async function autoTransfer() {
             amount: 'all'
         })
     ])
-    const equivalent = price * newBalance
+    const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
+    const equivalent = price * newRecipientBalance
     const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT').brightGreen
     const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTT').brightMagenta
-    const newBalanceStr = (newBalance.toLocaleString() + ' BTT').brightMagenta
+    const newBalanceStr = (newRecipientBalance.toLocaleString() + ' BTT').brightMagenta
 
     log.info(`${paymentAmountStr} -> ${newBalanceStr} (${equivalentStr})`)
 }
@@ -58,8 +60,13 @@ export async function start() {
     try {
         await autoTransfer()
     } catch (error) {
-        if (error.message === 'Empty balance') 
+        if (error.message === 'Empty balance') {
             return log.debug('No balance to transfer')
+        }
+        if (error.message === 'Forbidden') {
+            await bitTorrentSpeed.resetAuth()
+            log.warn('Autotransfer: auth reset')
+        }
             
         log.error(`Autotransfer: ${error.message}`)
         log.debug(error)
