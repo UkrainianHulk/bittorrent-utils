@@ -34,7 +34,11 @@ export const getBalance = (publicKeyStr) =>
         })
     })
 
-export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) =>
+export const transfer = ({
+    payerPrivateKeyStr,
+    recipientPublicKeyStr,
+    amount,
+}) =>
     new Promise((resolve, reject) => {
         const payerPrivateKeyObject = new PrivateKey(payerPrivateKeyStr)
         const recipientPublicKeyObject = new PublicKey(recipientPublicKeyStr)
@@ -45,15 +49,16 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
             amount: BTTtoUBTT(amount),
         }
 
-        const TransferRequestMessageType = ledgerProto
-            .lookupType('ledger.TransferRequest')
-        const TransferRequestMessage = TransferRequestMessageType
-            .create(transferRequest)
-        const serializedTransferRequestMessage = TransferRequestMessageType
-            .encode(TransferRequestMessage)
-            .finish()
-        const signature = payerPrivateKeyObject
-            .hashAndSign(serializedTransferRequestMessage)
+        const TransferRequestMessageType = ledgerProto.lookupType(
+            'ledger.TransferRequest'
+        )
+        const TransferRequestMessage =
+            TransferRequestMessageType.create(transferRequest)
+        const serializedTransferRequestMessage =
+            TransferRequestMessageType.encode(TransferRequestMessage).finish()
+        const signature = payerPrivateKeyObject.hashAndSign(
+            serializedTransferRequestMessage
+        )
 
         const request = {
             transfer_request: transferRequest,

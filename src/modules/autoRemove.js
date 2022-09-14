@@ -1,6 +1,6 @@
 import { setTimeout } from 'timers/promises'
 import config from '../libs/config.js'
-import log from '../libs/log.js'
+import log from '../libs/Logger.js'
 import bitTorrent from '../services/bitTorrentAccess.js'
 import {
     msToDHMS,
@@ -75,7 +75,7 @@ async function autoRemove() {
         const ratio = (torrent.ratio / 1000).toFixed(2)
         const status = torrent.status
         const added = msToDHMS(Date.now() - torrent.added * 1000)
-        log.info([ name, size, ratio, status, added ].join(' | '))
+        log.info([name, size, ratio, status, added].join(' | '))
     })
 
     if (AUTOREMOVE_PREVENT_REMOVING)
@@ -83,7 +83,7 @@ async function autoRemove() {
 
     await Promise.all([
         bitTorrent.deleteTorrents(duplicationListHashes),
-        bitTorrent.deleteTorrents(removalListHashes)
+        bitTorrent.deleteTorrents(removalListHashes),
     ])
 
     log.info('Torrents removed')
@@ -93,7 +93,7 @@ export async function start() {
     try {
         await autoRemove()
     } catch (error) {
-        log.error(`Autoconfig: ${error.message}`)
+        log.error(error.message)
         log.debug(error)
     } finally {
         await setTimeout(AUTOREMOVE_INTERVAL_SECONDS * 1000)

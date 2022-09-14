@@ -1,7 +1,7 @@
 import { setTimeout } from 'timers/promises'
 import semver from 'semver'
 import config from '../libs/config.js'
-import log from '../libs/log.js'
+import Logger from '../libs/Logger.js'
 import bitTorrent from '../services/bitTorrentAccess.js'
 
 const {
@@ -11,6 +11,8 @@ const {
     PEERS_FILTER_UTORRENT_VERSION,
     PEERS_FILTER_LIBTORRENT_VERSION,
 } = config
+
+const log = new Logger('peers filter')
 
 async function peersFilter() {
     const ipFilterModificationTime =
@@ -87,7 +89,7 @@ export async function start() {
     try {
         await peersFilter()
     } catch (error) {
-        log.error(`Peers filter: ${error.message}`)
+        log.error(error.message)
         log.debug(error)
     } finally {
         await setTimeout(PEERS_FILTER_INTERVAL_SECONDS * 1000)
