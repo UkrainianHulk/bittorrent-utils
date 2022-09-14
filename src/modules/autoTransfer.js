@@ -63,13 +63,14 @@ export async function start() {
         if (error.message === 'Empty balance') {
             return log.debug('No balance to transfer')
         }
+            
+        log.error(`Autotransfer: ${error.message}`)
+        log.debug(error)
+
         if (error.message === 'Forbidden') {
             await bitTorrentSpeed.resetAuth()
             log.warn('Autotransfer: auth reset')
         }
-            
-        log.error(`Autotransfer: ${error.message}`)
-        log.debug(error)
     } finally {
         await setTimeout(AUTOTRANSFER_INTERVAL_SECONDS * 1000)
         await start()
