@@ -29,6 +29,7 @@ export default {
     AUTOTRANSFER_INFLUXDB_TOKEN: 'influxdb-token',
     AUTOTRANSFER_INFLUXDB_ORGANISATION: 'bittorrent-utils',
     AUTOTRANSFER_INFLUXDB_BUCKET: 'bittorrent-utils',
+    AUTOTRANSFER_INFLUXDB_TAG: 'bittorrent-utils',
 
     AUTOREMOVE_ENABLED: false,
     AUTOREMOVE_INTERVAL_SECONDS: 15,

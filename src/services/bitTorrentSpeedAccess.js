@@ -7,10 +7,8 @@ const {
     BITTORRENT_SPEED_PORT_FILE_PATH,
 } = config
 
-const bitTorrentSpeed = new BitTorrentSpeed({
+export default new BitTorrentSpeed({
     password: BITTORRENT_SPEED_PASSWORD,
     passwordForced: BITTORRENT_SPEED_PASSWORD_FORCED,
     portFilePath: BITTORRENT_SPEED_PORT_FILE_PATH,
 })
-
-export default bitTorrentSpeed

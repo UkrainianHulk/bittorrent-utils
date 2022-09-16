@@ -1,34 +1,25 @@
 import 'colors'
 import { setTimeout } from 'timers/promises'
-import fetch from 'node-fetch'
 import Logger from '../libs/Logger.js'
 import config from '../libs/config.js'
 import bitTorrentSpeed from '../services/bitTorrentSpeedAccess.js'
 import inAppTransfer from './inAppTransfer.js'
 import { getBalance } from '../services/ledger/index.js'
+import { getBttPrice } from '../services/binance.js'
+import { getPublicIp } from '../services/apify.js'
+import influxDB from '../services/influxDBAccess.js'
 
 const {
     AUTOTRANSFER_TO,
     AUTOTRANSFER_FROM,
     AUTOTRANSFER_INTERVAL_SECONDS,
     // AUTOTRANSFER_HISTORY_AGE_HOURS,
-    // AUTOTRANSFER_INFLUXDB_ENABLED,
-    // AUTOTRANSFER_INFLUXDB_URL,
-    // AUTOTRANSFER_INFLUXDB_TOKEN,
-    // AUTOTRANSFER_INFLUXDB_ORGANISATION,
-    // AUTOTRANSFER_INFLUXDB_BUCKET
+    AUTOTRANSFER_INFLUXDB_ENABLED,
+    AUTOTRANSFER_INFLUXDB_TAG
 } = config
 
 const log = new Logger('autotransfer')
-
-const getBttPrice = async () => {
-    const response = await fetch(
-        'https://api.binance.com/api/v3/ticker/price?symbol=BTTCUSDT'
-    )
-    const json = await response.json()
-    const value = parseFloat(json.price)
-    return value
-}
+const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED ? await getPublicIp() : null
 
 async function getPayerPrivateKey() {
     if (AUTOTRANSFER_FROM === 'local')
@@ -46,6 +37,11 @@ async function autoTransfer() {
             amount: 'all',
         }),
     ])
+    if (AUTOTRANSFER_INFLUXDB_ENABLED) await influxDB.pushTransferData({
+        ip: publicIp,
+        tag: AUTOTRANSFER_INFLUXDB_TAG,
+        amount: paymentAmount
+    })
     const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
     const equivalent = price * newRecipientBalance
     const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT')

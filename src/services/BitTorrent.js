@@ -43,12 +43,6 @@ class Peer {
 }
 
 class BitTorrent {
-    constructor({ guiUrl, guiUsername, guiPassword, ipFilterFilePath }) {
-        this.#guiUrl = guiUrl
-        this.#guiUsername = guiUsername
-        this.#guiPassword = guiPassword
-        this.#ipFilterFilePath = ipFilterFilePath
-    }
 
     #guiUrl
     #guiUsername
@@ -56,6 +50,13 @@ class BitTorrent {
     #ipFilterFilePath
     #token
     #guid
+    
+    constructor({ guiUrl, guiUsername, guiPassword, ipFilterFilePath }) {
+        this.#guiUrl = guiUrl
+        this.#guiUsername = guiUsername
+        this.#guiPassword = guiPassword
+        this.#ipFilterFilePath = ipFilterFilePath
+    }
 
     async #authorize() {
         if (this.#token && this.#guid) return

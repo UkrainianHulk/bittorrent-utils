@@ -2,7 +2,14 @@ import fs from 'fs'
 import { URL } from 'url'
 import fetch from 'node-fetch'
 
-export default class BitTorrentSpeed {
+class BitTorrentSpeed {
+
+    #url
+    #token
+    #password
+    #passwordForced
+    #privateKey
+    
     constructor({ password, passwordForced, portFilePath }) {
         const portFileData = fs.readFileSync(portFilePath)
         const port = parseInt(portFileData)
@@ -10,12 +17,6 @@ export default class BitTorrentSpeed {
         this.#password = password
         this.#passwordForced = passwordForced
     }
-
-    #url
-    #token
-    #password
-    #passwordForced
-    #privateKey
 
     async #authorize() {
         if (this.#token) return
@@ -64,3 +65,5 @@ export default class BitTorrentSpeed {
         })
     }
 }
+
+export default BitTorrentSpeed
