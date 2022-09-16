@@ -1,6 +1,5 @@
 import { setTimeout } from 'timers/promises'
 import config from '../libs/config.js'
-import log from '../libs/Logger.js'
 import bitTorrent from '../services/bitTorrentAccess.js'
 import {
     msToDHMS,
@@ -8,6 +7,7 @@ import {
     GBtoBytes,
     setStringLength,
 } from '../libs/utils.js'
+import Logger from '../libs/Logger.js'
 
 const {
     AUTOREMOVE_INTERVAL_SECONDS,
@@ -16,6 +16,8 @@ const {
     AUTOREMOVE_DEDUPLICATION,
     AUTOREMOVE_PREVENT_REMOVING,
 } = config
+
+const log = new Logger('autoremove')
 
 function extractDuplication(torrents, index = 0) {
     if (index >= torrents.length) return []
@@ -75,7 +77,7 @@ async function autoRemove() {
         const ratio = (torrent.ratio / 1000).toFixed(2)
         const status = torrent.status
         const added = msToDHMS(Date.now() - torrent.added * 1000)
-        log.info([name, size, ratio, status, added].join(' | '))
+        log.info('| ' + [name, size, ratio, status, added].join(' | '))
     })
 
     if (AUTOREMOVE_PREVENT_REMOVING)
