@@ -1,4 +1,5 @@
 import 'colors'
+import { networkInterfaces } from 'os'
 import { setTimeout } from 'timers/promises'
 import Logger from '../libs/Logger.js'
 import config from '../libs/config.js'
@@ -20,6 +21,7 @@ const {
 
 const log = new Logger('autotransfer')
 const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED ? await getPublicIp() : null
+const localIp = AUTOTRANSFER_INFLUXDB_ENABLED ? Object.values(networkInterfaces()).flat().find((i) => i?.family === 'IPv4' && !i?.internal)?.address : null
 
 async function getPayerPrivateKey() {
     if (AUTOTRANSFER_FROM === 'local')
@@ -38,7 +40,8 @@ async function autoTransfer() {
         }),
     ])
     if (AUTOTRANSFER_INFLUXDB_ENABLED) await influxDB.pushTransferData({
-        ip: publicIp,
+        localIp,
+        publicIp,
         tag: AUTOTRANSFER_INFLUXDB_TAG,
         amount: paymentAmount
     })

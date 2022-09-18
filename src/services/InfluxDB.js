@@ -10,9 +10,10 @@ class InfluxDBClass {
         this.#writeApi = this.#client.getWriteApi(org, bucket)
     }
 
-    async pushTransferData({ ip, tag, amount }) {
+    async pushTransferData({ localIp, publicIp, tag, amount }) {
         const point = new Point('BTT')
-            .tag('ip', ip)
+            .tag('local_ip', localIp)
+            .tag('public_ip', publicIp)
             .tag('tag', tag)
             .floatField('amount', amount)
             .timestamp(new Date())
