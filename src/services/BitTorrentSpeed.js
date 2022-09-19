@@ -34,7 +34,7 @@ class BitTorrentSpeed {
 
     async #authorize() {
         if (this.#token) return this.#token
-        const url = new URL('token', this.#getUrl())
+        const url = new URL('token', await this.#getUrl())
         const response = await fetch(url.href)
         if (response.status !== 200) throw new Error(response.statusText)
         this.#token = await response.text()
