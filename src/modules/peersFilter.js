@@ -13,16 +13,17 @@ const {
 } = config
 
 const log = new Logger('peers filter')
+let ipFilterResetTimestamp = 0
 
 async function peersFilter() {
-    const ipFilterModificationTime =
-        await bitTorrent.getIpFilterFileModificationTime()
+    const nowTimestamp = Date.now()
 
     if (
-        Date.now() - ipFilterModificationTime >
+        nowTimestamp - ipFilterResetTimestamp >
         PEERS_FILTER_RESET_INTERVAL_MINUTES * 60 * 1000
     ) {
         await bitTorrent.resetIpFilter()
+        ipFilterResetTimestamp = nowTimestamp
         log.info('Peers filter reset')
     }
 

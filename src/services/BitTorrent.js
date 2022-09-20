@@ -178,11 +178,6 @@ class BitTorrent {
     async resetIpFilter() {
         await fs.writeFile(this.#ipFilterFilePath, '')
     }
-
-    async getIpFilterFileModificationTime() {
-        const stats = await fs.stat(this.#ipFilterFilePath)
-        return Date.parse(stats.mtime)
-    }
 }
 
 export default BitTorrent
