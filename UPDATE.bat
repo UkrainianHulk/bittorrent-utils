@@ -8,4 +8,4 @@ node -v
 
 CMD /C git pull
 
-@pause
+timeout /t 5
