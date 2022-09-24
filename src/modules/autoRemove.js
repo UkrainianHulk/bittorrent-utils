@@ -84,7 +84,7 @@ async function autoRemove() {
         return log.info('Torrents removing prevented')
 
     await Promise.all([
-        bitTorrent.deleteTorrents(duplicationListHashes),
+        bitTorrent.deleteTorrents(duplicationListHashes, false),
         bitTorrent.deleteTorrents(removalListHashes),
     ])
 
