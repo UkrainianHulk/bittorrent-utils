@@ -1,5 +1,5 @@
 import config from '../libs/config.js'
-import BitTorrentSpeed from '../services/BitTorrentSpeed.js'
+import BitTorrentSpeed from './BitTorrentSpeed.js'
 
 const {
     BITTORRENT_SPEED_PASSWORD,

@@ -3,12 +3,12 @@ import { networkInterfaces } from 'os'
 import { setTimeout } from 'timers/promises'
 import Logger from '../libs/Logger.js'
 import config from '../libs/config.js'
-import bitTorrentSpeed from '../services/bitTorrentSpeedAccess.js'
+import bitTorrentSpeed from '../services/bitTorrentSpeedClient.js'
 import inAppTransfer from './inAppTransfer.js'
 import { getBalance } from '../services/ledger/index.js'
 import { getBttPrice } from '../services/binance.js'
 import { getPublicIp } from '../services/apify.js'
-import influxDB from '../services/influxDBAccess.js'
+import influxDB from '../services/influxDBClient.js'
 
 const {
     AUTOTRANSFER_TO,

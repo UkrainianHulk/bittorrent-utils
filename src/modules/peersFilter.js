@@ -2,7 +2,7 @@ import { setTimeout } from 'timers/promises'
 import semver from 'semver'
 import config from '../libs/config.js'
 import Logger from '../libs/Logger.js'
-import bitTorrent from '../services/bitTorrentAccess.js'
+import bitTorrent from '../services/bitTorrentClient.js'
 
 const {
     PEERS_FILTER_INTERVAL_SECONDS,

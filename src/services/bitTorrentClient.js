@@ -1,5 +1,5 @@
 import config from '../libs/config.js'
-import BitTorrent from '../services/BitTorrent.js'
+import BitTorrent from './BitTorrent.js'
 
 const {
     BITTORRENT_GUI_URL,
