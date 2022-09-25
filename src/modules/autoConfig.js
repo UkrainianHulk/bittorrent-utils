@@ -1,8 +1,8 @@
 import { setTimeout } from 'timers/promises'
 import config from '../libs/config.js'
 import Logger from '../libs/Logger.js'
-import bitTorrent from '../services/bitTorrentAccess.js'
-import bitTorrentSpeed from '../services/bitTorrentSpeedAccess.js'
+import bitTorrent from '../services/bitTorrentClient.js'
+import bitTorrentSpeed from '../services/bitTorrentSpeedClient.js'
 
 const { AUTOCONFIG_SETTINGS } = config
 

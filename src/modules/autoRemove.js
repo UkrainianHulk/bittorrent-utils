@@ -1,6 +1,6 @@
 import { setTimeout } from 'timers/promises'
 import config from '../libs/config.js'
-import bitTorrent from '../services/bitTorrentAccess.js'
+import bitTorrent from '../services/bitTorrentClient.js'
 import {
     msToDHMS,
     bytesToGB,
