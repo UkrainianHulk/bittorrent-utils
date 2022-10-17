@@ -3,7 +3,6 @@ import { URL } from 'url'
 import fetch from 'node-fetch'
 
 class BitTorrentSpeed {
-
     #url
     #token
     #password
@@ -11,7 +10,7 @@ class BitTorrentSpeed {
     #portFilePath
     #port
     #privateKey
-    
+
     constructor({ password, passwordForced, portFilePath }) {
         this.#password = password
         this.#passwordForced = passwordForced

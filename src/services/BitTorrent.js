@@ -43,14 +43,13 @@ class Peer {
 }
 
 class BitTorrent {
-
     #guiUrl
     #guiUsername
     #guiPassword
     #ipFilterFilePath
     #token
     #guid
-    
+
     constructor({ guiUrl, guiUsername, guiPassword, ipFilterFilePath }) {
         this.#guiUrl = guiUrl
         this.#guiUsername = guiUsername

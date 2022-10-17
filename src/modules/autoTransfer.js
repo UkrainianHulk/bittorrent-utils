@@ -16,12 +16,16 @@ const {
     AUTOTRANSFER_INTERVAL_SECONDS,
     // AUTOTRANSFER_HISTORY_AGE_HOURS,
     AUTOTRANSFER_INFLUXDB_ENABLED,
-    AUTOTRANSFER_INFLUXDB_TAG
+    AUTOTRANSFER_INFLUXDB_TAG,
 } = config
 
 const log = new Logger('autotransfer')
-const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED ? await getPublicIp() : null
-const localIp = AUTOTRANSFER_INFLUXDB_ENABLED ? Object.values(networkInterfaces()).flat().find((i) => i?.family === 'IPv4' && !i?.internal)?.address : null
+const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED && (await getPublicIp())
+const localIp =
+    AUTOTRANSFER_INFLUXDB_ENABLED &&
+    Object.values(networkInterfaces())
+        .flat()
+        .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
 
 async function getPayerPrivateKey() {
     if (AUTOTRANSFER_FROM === 'local')
@@ -39,12 +43,13 @@ async function autoTransfer() {
             amount: 'all',
         }),
     ])
-    if (AUTOTRANSFER_INFLUXDB_ENABLED) await influxDB.pushTransferData({
-        localIp,
-        publicIp,
-        tag: AUTOTRANSFER_INFLUXDB_TAG,
-        amount: paymentAmount
-    })
+    if (AUTOTRANSFER_INFLUXDB_ENABLED)
+        await influxDB.pushTransferData({
+            localIp,
+            publicIp,
+            tag: AUTOTRANSFER_INFLUXDB_TAG,
+            amount: paymentAmount,
+        })
     const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
     const equivalent = price * newRecipientBalance
     const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT')

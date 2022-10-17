@@ -32,7 +32,7 @@ export default class Logger {
 
     warn = (msg) =>
         log.warn(timestamp(), 'WARN'.brightYellow, `[${this.#name}]`, msg)
-        
+
     error = (msg) =>
         log.error(timestamp(), 'ERROR'.brightRed, `[${this.#name}]`, msg)
 }

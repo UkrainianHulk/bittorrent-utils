@@ -1,16 +1,16 @@
-import InfluxDB from "./InfluxDB.js"
+import InfluxDB from './InfluxDB.js'
 import config from '../libs/config.js'
 
 const {
     AUTOTRANSFER_INFLUXDB_URL,
     AUTOTRANSFER_INFLUXDB_TOKEN,
     AUTOTRANSFER_INFLUXDB_ORGANISATION,
-    AUTOTRANSFER_INFLUXDB_BUCKET
+    AUTOTRANSFER_INFLUXDB_BUCKET,
 } = config
 
 export default new InfluxDB({
     url: AUTOTRANSFER_INFLUXDB_URL,
     token: AUTOTRANSFER_INFLUXDB_TOKEN,
     org: AUTOTRANSFER_INFLUXDB_ORGANISATION,
-    bucket: AUTOTRANSFER_INFLUXDB_BUCKET
+    bucket: AUTOTRANSFER_INFLUXDB_BUCKET,
 })

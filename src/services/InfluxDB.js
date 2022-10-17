@@ -1,7 +1,6 @@
 import { InfluxDB, Point } from '@influxdata/influxdb-client'
 
 class InfluxDBClass {
-
     #client
     #writeApi
 
@@ -21,7 +20,6 @@ class InfluxDBClass {
         this.#writeApi.writePoint(point)
         await this.#writeApi.flush()
     }
-    
 }
 
 export default InfluxDBClass
