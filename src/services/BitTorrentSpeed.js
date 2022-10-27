@@ -44,8 +44,18 @@ class BitTorrentSpeed {
         await this.#authorize()
         url.searchParams.set('t', this.#token)
         const response = await fetch(url.href, options)
-        if (response.status !== 200) throw new Error(response.statusText)
-        else return response.text()
+        
+        if (response.status === 403) this.resetAuth()
+        if (response.status !== 200) {
+            const responseText = (await response.text()).replace(/^\s+|\s+$/g, '')
+            throw new Error(`${response.status} ${response.statusText}: ${responseText}`)
+        }
+
+        return response.text()
+    }
+
+    resetAuth() {
+        this.#token = null
     }
 
     async resetPassword(newPassword) {
@@ -57,10 +67,6 @@ class BitTorrentSpeed {
         })
         this.#password = newPassword
         return this.#password
-    }
-
-    async resetAuth() {
-        this.#token = null
     }
 
     async getPrivateKey() {

@@ -91,11 +91,16 @@ class BitTorrent {
             },
         })
         if (response.status !== 200) {
-            this.#token = null
-            this.#guid = null
-            throw new Error(`Code ${response.status}: ${response.statusText}`)
+            this.resetAuth()
+            const responseText = (await response.text()).replace(/^\s+|\s+$/g, '')
+            throw new Error(`${response.status} ${response.statusText}: ${responseText}`)
         }
         return response.json()
+    }
+
+    resetAuth() {
+        this.#token = null
+        this.#guid = null
     }
 
     async getTorrents() {

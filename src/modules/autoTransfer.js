@@ -70,11 +70,6 @@ export async function start() {
 
         log.error(error.message)
         log.debug(error)
-
-        if (error.message === 'Forbidden') {
-            await bitTorrentSpeed.resetAuth()
-            log.warn('auth reset')
-        }
     } finally {
         await setTimeout(AUTOTRANSFER_INTERVAL_SECONDS * 1000)
         await start()
