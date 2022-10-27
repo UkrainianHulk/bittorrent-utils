@@ -93,7 +93,7 @@ class BitTorrent {
         if (response.status !== 200) {
             this.#token = null
             this.#guid = null
-            throw new Error(`${response.statusText} (code ${response.status})`)
+            throw new Error(`Code ${response.status}: ${response.statusText}`)
         }
         return response.json()
     }
