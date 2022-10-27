@@ -1,5 +1,4 @@
 import 'colors'
-import { networkInterfaces } from 'os'
 import { setTimeout } from 'timers/promises'
 import Logger from '../libs/Logger.js'
 import config from '../libs/config.js'
@@ -9,6 +8,7 @@ import { getBalance } from '../services/ledger/index.js'
 import { getBttPrice } from '../services/binance.js'
 import { getPublicIp } from '../services/apify.js'
 import influxDB from '../services/influxDBClient.js'
+import { getLocalIp } from '../libs/utils.js'
 
 const {
     AUTOTRANSFER_TO,
@@ -20,12 +20,8 @@ const {
 } = config
 
 const log = new Logger('autotransfer')
+const localIp = AUTOTRANSFER_INFLUXDB_ENABLED && getLocalIp()
 const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED && (await getPublicIp())
-const localIp =
-    AUTOTRANSFER_INFLUXDB_ENABLED &&
-    Object.values(networkInterfaces())
-        .flat()
-        .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
 
 async function getPayerPrivateKey() {
     if (AUTOTRANSFER_FROM === 'local')
@@ -43,13 +39,15 @@ async function autoTransfer() {
             amount: 'all',
         }),
     ])
+
     if (AUTOTRANSFER_INFLUXDB_ENABLED)
         await influxDB.pushTransferData({
+            tag: AUTOTRANSFER_INFLUXDB_TAG,
             localIp,
             publicIp,
-            tag: AUTOTRANSFER_INFLUXDB_TAG,
             amount: paymentAmount,
         })
+
     const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
     const equivalent = price * newRecipientBalance
     const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT')

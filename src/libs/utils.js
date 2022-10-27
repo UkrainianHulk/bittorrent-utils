@@ -1,3 +1,5 @@
+import { networkInterfaces } from 'os'
+
 export function numberToPercent(number) {
     return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
 }
@@ -35,4 +37,10 @@ export function setStringLength(string, maxLength) {
     return string.length > maxLength
         ? string.substring(0, maxLength - 3) + '...'
         : string.padEnd(maxLength, ' ')
+}
+
+export function getLocalIp() {
+    return Object.values(networkInterfaces())
+        .flat()
+        .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
 }
