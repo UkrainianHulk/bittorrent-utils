@@ -90,7 +90,11 @@ class BitTorrent {
                 Cookie: `GUID=${this.#guid}`,
             },
         })
-        if (response.status !== 200) throw new Error(response.statusText)
+        if (response.status !== 200) {
+            this.#token = null
+            this.#guid = null
+            throw new Error(`${response.statusText} (code ${response.status})`)
+        }
         return response.json()
     }
 
