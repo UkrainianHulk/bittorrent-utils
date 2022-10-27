@@ -64,10 +64,7 @@ export async function start() {
     try {
         await autoTransfer()
     } catch (error) {
-        if (error.message === 'Empty balance') {
-            return log.debug('No balance to transfer')
-        }
-
+        if (error.message === 'Empty balance') return log.debug('No balance to transfer')
         log.error(error.message)
         log.debug(error)
     } finally {
