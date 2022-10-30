@@ -7,12 +7,12 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Features
 
-- **Transfer IN-APP BTT**: transfer IN-APP BTT between wallets
-- **Automatic transfer of IN-APP BTT**: collect IN-APP BTT automatically from your wallet to avoid losing them while downloading
-- **Automatic removal of torrents**: space-dependent and/or amount-dependent automatic removal of torrents
-- **Peers filter**: exclude peers that use no-BTT clients
-- **BitTorrent & μTorrent automatic configuration**: configure all your BitTorrent or μTorrent clients from one place
-- **Health check**: automatically restart µTorrent/BitTorrent client if it
+- **Transfering IN-APP BTT**: transfer IN-APP BTT between wallets
+- **Transfering IN-APP BTT automatically**: collect IN-APP BTT automatically from your wallet to avoid losing them while downloading
+- **Removing unnecessary torrents**: space-dependent and/or amount-dependent automatic removal of torrents
+- **Peers filtering**: exclude peers that use no-BTT clients
+- **Configurating BitTorrent & μTorrent**: fast configure µTorrent/BitTorrent clients with optimal settings
+- **Health checking and restart**: automatically restart µTorrent/BitTorrent client if it crashes
 - **Cross-platform**: windows and linux compatible
 - **Private**: local transactions signing, all private actions take place only on your pc
 
