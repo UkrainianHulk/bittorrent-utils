@@ -18,7 +18,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Сonsole output sample
 
-![](screenshots/0.png?raw=true)
+![Script console output sample](screenshots/0.png?raw=true)
 
 ## Quick Start
 
@@ -56,7 +56,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
     nano bittorrent-utils/config/user.js
     ```
 
-- Navigate to script directory and run:
+- Navigate to script directory and start it:
 
     ```bash
     cd bittorrent-utils && npm start
