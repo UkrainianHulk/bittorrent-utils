@@ -29,7 +29,7 @@ async function healthCheck() {
         failedAttemps = 0
     } catch (error) {
         failedAttemps += 1
-        log.warn(`Health check failed, failed attempts count: ${failedAttemps}`)
+        log.warn(`Client is unreachable, failed attempts count: ${failedAttemps}`)
         if (failedAttemps >= HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART)
             await restartBitTorrent()
         throw error

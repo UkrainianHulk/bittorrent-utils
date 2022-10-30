@@ -97,7 +97,7 @@ The script provides two config files:
 
 ## Useful links
 
-- TRON fees calculator: https://tronstation.io/calculator
+- TRON fees calculator: <https://tronstation.io/calculator>
 
 ## Support
 
