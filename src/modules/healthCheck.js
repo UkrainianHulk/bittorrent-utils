@@ -20,7 +20,7 @@ async function restartBitTorrent() {
     const bitTorrentProcesses = await findProcess('name', 'BitTorrent')
     for (const bitTorrentProcess of bitTorrentProcesses)
         process.kill(bitTorrentProcess.pid)
-    childProcess.execFile(BITTORRENT_FILE_PATH, { detached: true })
+    childProcess.execFile(BITTORRENT_FILE_PATH)
 }
 
 async function healthCheck() {
