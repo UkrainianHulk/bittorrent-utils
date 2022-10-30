@@ -50,9 +50,12 @@ async function autoTransfer() {
 
     const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
     const equivalent = price * newRecipientBalance
-    const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT').brightGreen
-    const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTT').brightMagenta
-    const newBalanceStr = (newRecipientBalance.toLocaleString() + ' BTT').brightMagenta
+    const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT')
+        .brightGreen
+    const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTT')
+        .brightMagenta
+    const newBalanceStr = (newRecipientBalance.toLocaleString() + ' BTT')
+        .brightMagenta
 
     log.info(`${paymentAmountStr} -> ${newBalanceStr} (${equivalentStr})`)
 }
@@ -61,7 +64,8 @@ export async function start() {
     try {
         await autoTransfer()
     } catch (error) {
-        if (error.message === 'Empty balance') return log.debug('No balance to transfer')
+        if (error.message === 'Empty balance')
+            return log.debug('No balance to transfer')
         log.error(error.message)
         log.debug(error)
     } finally {

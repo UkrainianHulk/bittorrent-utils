@@ -9,17 +9,18 @@ import bitTorrent from '../services/bitTorrentClient.js'
 const {
     HEALTHCHECK_INTERVAL_SECONDS,
     HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART,
-    BITTORRENT_FILE_PATH
+    BITTORRENT_FILE_PATH,
 } = config
 
 const log = new Logger('health check')
 
-let failedAttemps = 0;
+let failedAttemps = 0
 
 async function restartBitTorrent() {
     const bitTorrentProcesses = await findProcess('name', 'BitTorrent')
-    for (const bitTorrentProcess of bitTorrentProcesses) process.kill(bitTorrentProcess.pid)
-    childProcess.execFile(BITTORRENT_FILE_PATH, { detached: true }) 
+    for (const bitTorrentProcess of bitTorrentProcesses)
+        process.kill(bitTorrentProcess.pid)
+    childProcess.execFile(BITTORRENT_FILE_PATH, { detached: true })
 }
 
 async function healthCheck() {
@@ -29,7 +30,8 @@ async function healthCheck() {
     } catch (error) {
         failedAttemps += 1
         log.warn(`Health check failed, failed attempts count: ${failedAttemps}`)
-        if (failedAttemps >= HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART) await restartBitTorrent()
+        if (failedAttemps >= HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART)
+            await restartBitTorrent()
         throw error
     }
 }

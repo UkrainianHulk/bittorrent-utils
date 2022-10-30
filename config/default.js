@@ -8,14 +8,21 @@ export default {
     BITTORRENT_GUI_USERNAME: 'username',
     BITTORRENT_GUI_PASSWORD: 'password',
     BITTORRENT_FILE_PATH: path.join(APPDATA, '/BitTorrent/BitTorrent.exe'),
-    BITTORRENT_IP_FILTER_FILE_PATH: path.join(APPDATA, '/BitTorrent/ipfilter.dat'),
-    BITTORRENT_SPEED_PORT_FILE_PATH: path.join(LOCALAPPDATA, '/BitTorrentHelper/port'),
+    BITTORRENT_IP_FILTER_FILE_PATH: path.join(
+        APPDATA,
+        '/BitTorrent/ipfilter.dat'
+    ),
+    BITTORRENT_SPEED_PORT_FILE_PATH: path.join(
+        LOCALAPPDATA,
+        '/BitTorrentHelper/port'
+    ),
     BITTORRENT_SPEED_PASSWORD: 'password',
     BITTORRENT_SPEED_PASSWORD_FORCED: true,
 
     AUTOTRANSFER_ENABLED: false,
     AUTOTRANSFER_FROM: 'local',
-    AUTOTRANSFER_TO: 'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
+    AUTOTRANSFER_TO:
+        'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=',
     AUTOTRANSFER_INTERVAL_SECONDS: 1,
     AUTOTRANSFER_HISTORY_AGE_HOURS: 24,
     AUTOTRANSFER_INFLUXDB_ENABLED: false,

@@ -46,8 +46,13 @@ class BitTorrentSpeed {
         const response = await fetch(url.href, options)
         if (response.status === 403) this.resetAuth()
         if (response.status !== 200) {
-            const responseText = (await response.text()).replace(/^\s+|\s+$/g, '')
-            throw new Error(`${response.status} ${response.statusText}: ${responseText}`)
+            const responseText = (await response.text()).replace(
+                /^\s+|\s+$/g,
+                ''
+            )
+            throw new Error(
+                `${response.status} ${response.statusText}: ${responseText}`
+            )
         }
         return response.text()
     }
