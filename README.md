@@ -74,7 +74,7 @@ The script provides two config files:
     - the settings from this file overwrite the default settings from the `default.js` file
     - **edit `user.js`** file to configure your instance of script
 2. Default config file location: `bittorrent-utils/config/default.js`
-    - a file with the default settings and their description
+    - a file with the default settings, you can find here all possible options
     - **avoid editing `default.js`** file in favor of editing `user.js` file
 
 ## FAQ
