@@ -29,6 +29,7 @@
         "b58": "^4.0.3",
         "colors": "^1.4.0",
         "cross-env": "^7.0.3",
+        "find-process": "^1.4.7",
         "keccak": "^3.0.2",
         "loglevel": "^1.8.0",
         "node-fetch": "^3.2.10",

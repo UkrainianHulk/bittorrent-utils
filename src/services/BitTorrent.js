@@ -186,6 +186,11 @@ class BitTorrent {
     async resetIpFilter() {
         await fs.writeFile(this.#ipFilterFilePath, '')
     }
+
+    async healthCheck() {
+        const url = new URL(this.#guiUrl)
+        return await fetch(url.href)
+    }
 }
 
 export default BitTorrent
