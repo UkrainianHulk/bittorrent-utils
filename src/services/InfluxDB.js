@@ -20,6 +20,10 @@ class InfluxDBClass {
         this.#writeApi.writePoint(point)
         await this.#writeApi.flush()
     }
+
+    async close() {
+        await this.#writeApi.close()
+    }
 }
 
 export default InfluxDBClass

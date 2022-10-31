@@ -1,3 +1,4 @@
+import process from 'process'
 import InfluxDB from './InfluxDB.js'
 import config from '../libs/config.js'
 
@@ -8,9 +9,13 @@ const {
     AUTOTRANSFER_INFLUXDB_BUCKET,
 } = config
 
-export default new InfluxDB({
+const influxDBClient = new InfluxDB({
     url: AUTOTRANSFER_INFLUXDB_URL,
     token: AUTOTRANSFER_INFLUXDB_TOKEN,
     org: AUTOTRANSFER_INFLUXDB_ORGANISATION,
     bucket: AUTOTRANSFER_INFLUXDB_BUCKET,
 })
+
+process.on('SIGINT', influxDBClient.close)
+
+export default influxDBClient
