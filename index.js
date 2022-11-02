@@ -1,17 +1,19 @@
-const config = require('config')
-const process = require('process')
-const log = require('./src/libs/log.js')
+import config from './src/libs/config.js'
 
-log.debug(`Environment: ${process.env.NODE_ENV}`)
+const {
+  AUTOTRANSFER_ENABLED,
+  AUTOREMOVE_ENABLED,
+  PEERS_FILTER_ENABLED,
+  AUTOCONFIG_ENABLED,
+  HEALTHCHECK_ENABLED
+} = config
 
-try {
-    config.get('AUTOTRANSFER_INTERVAL_SECONDS') &&
-        require('./src/autoTransfer.js').start()
-    config.get('AUTOREMOVE_INTERVAL_SECONDS') &&
-        require('./src/autoRemove.js').start()
-    config.get('PEERS_FILTER_INTERVAL_SECONDS') &&
-        require('./src/peersFilter.js').start()
-    config.get('AUTOCONFIG_ENABLE') && require('./src/autoConfig.js').start()
-} catch (error) {
-    console.error(error)
+if (AUTOTRANSFER_ENABLED) {
+  ;(await import('./src/modules/autoTransfer.js')).start()
 }
+if (AUTOREMOVE_ENABLED) (await import('./src/modules/autoRemove.js')).start()
+if (PEERS_FILTER_ENABLED) {
+  ;(await import('./src/modules/peersFilter.js')).start()
+}
+if (AUTOCONFIG_ENABLED) (await import('./src/modules/autoConfig.js')).start()
+if (HEALTHCHECK_ENABLED) (await import('./src/modules/healthCheck.js')).start()

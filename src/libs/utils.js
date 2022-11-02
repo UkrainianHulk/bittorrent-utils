@@ -1,48 +1,46 @@
-const process = require('process')
-const log = require('./log.js')
+import { networkInterfaces } from 'node:os'
 
-module.exports.isProduction =
-    process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'user'
-module.exports.numberToPercent = (number) =>
-    (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
-module.exports.UBTTtoBTT = (amount) => amount / 1000000
-module.exports.BTTtoUBTT = (amount) => amount * 1000000
-module.exports.bytesToGB = (bytes) => bytes / 1024 / 1024 / 1024
-module.exports.GBtoBytes = (GB) => GB * 1024 * 1024 * 1024
-
-module.exports.msToDHMS = (time) => {
-    const SEC = 1e3
-    const MIN = SEC * 60
-    const HOUR = MIN * 60
-    const DAY = HOUR * 24
-    const ms = Math.abs(time)
-    const d = (ms / DAY) | 0
-    const h = ((ms % DAY) / HOUR) | 0
-    const m = ((ms % HOUR) / MIN) | 0
-    const s = ((ms % MIN) / SEC) | 0
-    return `${time < 0 ? '-' : ''}${d}d ${h}h ${m}m ${s}s`
+export function numberToPercent(number) {
+  return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
 }
 
-module.exports.setStringLength = (string, maxLength) =>
-    string.length > maxLength
-        ? string.substring(0, maxLength - 3) + '...'
-        : string.padEnd(maxLength, ' ')
+export function UBTTtoBTT(amount) {
+  return amount / 1000
+}
 
-module.exports.iteration = async function (func, delay, ...args) {
-    if (!module.exports.isProduction)
-        try {
-            return await func(...args)
-        } catch (error) {
-            log.error(error.stack, func.name)
-        }
-    else
-        try {
-            await func(...args)
-        } catch (error) {
-            log.error(error.stack, func.name)
-        } finally {
-            await new Promise((resolve) => setTimeout(resolve, delay))
-            // eslint-disable-next-line no-unsafe-finally
-            return await module.exports.iteration(func, delay, ...args)
-        }
+export function BTTtoUBTT(amount) {
+  return amount * 1000
+}
+
+export function bytesToGB(bytes) {
+  return bytes / 1024 / 1024 / 1024
+}
+
+export function GBtoBytes(GB) {
+  return GB * 1024 * 1024 * 1024
+}
+
+export function msToDHMS(time) {
+  const SEC = 1e3
+  const MIN = SEC * 60
+  const HOUR = MIN * 60
+  const DAY = HOUR * 24
+  const ms = Math.abs(time)
+  const d = (ms / DAY) | 0
+  const h = ((ms % DAY) / HOUR) | 0
+  const m = ((ms % HOUR) / MIN) | 0
+  const s = ((ms % MIN) / SEC) | 0
+  return `${time < 0 ? '-' : ''}${d}d ${h}h ${m}m ${s}s`
+}
+
+export function setStringLength(string, maxLength) {
+  return string.length > maxLength
+    ? string.substring(0, maxLength - 3) + '...'
+    : string.padEnd(maxLength, ' ')
+}
+
+export function getLocalIp() {
+  return Object.values(networkInterfaces())
+    .flat()
+    .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
 }
