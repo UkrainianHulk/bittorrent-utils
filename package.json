@@ -5,8 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=user node index.js",
+    "start": "npm install --omit=dev && node -e \"console.clear()\" && cross-env NODE_ENV=user node index.js",
     "dev": "cross-env NODE_ENV=dev node --watch index.js",
+    "start-manual-transfer": "npm install --omit=dev && node -e \"console.clear()\" && cross-env NODE_ENV=user node ./src/modules/manualTransfer.js",
+    "dev-manual-transfer": "cross-env NODE_ENV=dev node --watch ./src/modules/manualTransfer.js",
     "lint": "eslint --fix --ext .js . && prettier --write ."
   },
   "keywords": [],
