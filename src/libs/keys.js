@@ -1,4 +1,4 @@
-import crypto from 'node:rypto'
+import crypto from 'node:crypto'
 import secp256k1 from 'secp256k1'
 import createKeccakHash from 'keccak'
 import base58 from 'b58'
