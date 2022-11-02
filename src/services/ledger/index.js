@@ -8,65 +8,66 @@ const grpcAdress = 'ledger.bt.co:443'
 const ledgerProtoPath = './src/services/Ledger/protos/ledger.proto'
 const ledgerProto = (await protobuf.load(ledgerProtoPath)).nested.ledger
 const packageDefinition = protoLoader.loadSync(ledgerProtoPath, {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true,
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true
 })
 const PackageObject = loadPackageDefinition(packageDefinition).ledger
 const ledgerClient = new PackageObject.Channels(
-    grpcAdress,
-    credentials.createSsl()
+  grpcAdress,
+  credentials.createSsl()
 )
 
 export const getBalance = (publicKeyStr) =>
-    new Promise((resolve, reject) => {
-        const publicKey = new PublicKey(publicKeyStr)
-        const request = { key: publicKey.bufferUncompressed }
+  new Promise((resolve, reject) => {
+    const publicKey = new PublicKey(publicKeyStr)
+    const request = { key: publicKey.bufferUncompressed }
 
-        ledgerClient.CreateAccount(request, function (error, response) {
-            if (error) return reject(error)
-            const balanceUbttStr = response.account.balance
-            const balanceUbttInt = parseInt(balanceUbttStr)
-            const balanceBttInt = UBTTtoBTT(balanceUbttInt)
-            resolve(balanceBttInt)
-        })
+    ledgerClient.CreateAccount(request, function (error, response) {
+      if (error) return reject(error)
+      const balanceUbttStr = response.account.balance
+      const balanceUbttInt = parseInt(balanceUbttStr)
+      const balanceBttInt = UBTTtoBTT(balanceUbttInt)
+      resolve(balanceBttInt)
     })
+  })
 
 export const transfer = ({
-    payerPrivateKeyStr,
-    recipientPublicKeyStr,
-    amount,
+  payerPrivateKeyStr,
+  recipientPublicKeyStr,
+  amount
 }) =>
-    new Promise((resolve, reject) => {
-        const payerPrivateKeyObject = new PrivateKey(payerPrivateKeyStr)
-        const recipientPublicKeyObject = new PublicKey(recipientPublicKeyStr)
+  new Promise((resolve, reject) => {
+    const payerPrivateKeyObject = new PrivateKey(payerPrivateKeyStr)
+    const recipientPublicKeyObject = new PublicKey(recipientPublicKeyStr)
 
-        const transferRequest = {
-            payer: { key: payerPrivateKeyObject.public.bufferUncompressed },
-            recipient: { key: recipientPublicKeyObject.bufferUncompressed },
-            amount: BTTtoUBTT(amount),
-        }
+    const transferRequest = {
+      payer: { key: payerPrivateKeyObject.public.bufferUncompressed },
+      recipient: { key: recipientPublicKeyObject.bufferUncompressed },
+      amount: BTTtoUBTT(amount)
+    }
 
-        const TransferRequestMessageType = ledgerProto.lookupType(
-            'ledger.TransferRequest'
-        )
-        const TransferRequestMessage =
-            TransferRequestMessageType.create(transferRequest)
-        const serializedTransferRequestMessage =
-            TransferRequestMessageType.encode(TransferRequestMessage).finish()
-        const signature = payerPrivateKeyObject.hashAndSign(
-            serializedTransferRequestMessage
-        )
+    const TransferRequestMessageType = ledgerProto.lookupType(
+      'ledger.TransferRequest'
+    )
+    const TransferRequestMessage =
+      TransferRequestMessageType.create(transferRequest)
+    const serializedTransferRequestMessage = TransferRequestMessageType.encode(
+      TransferRequestMessage
+    ).finish()
+    const signature = payerPrivateKeyObject.hashAndSign(
+      serializedTransferRequestMessage
+    )
 
-        const request = {
-            transfer_request: transferRequest,
-            signature,
-        }
+    const request = {
+      transfer_request: transferRequest,
+      signature
+    }
 
-        ledgerClient.Transfer(request, function (error, response) {
-            if (error) reject(error)
-            else resolve(UBTTtoBTT(response.balance))
-        })
+    ledgerClient.Transfer(request, function (error, response) {
+      if (error) reject(error)
+      else resolve(UBTTtoBTT(response.balance))
     })
+  })

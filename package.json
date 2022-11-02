@@ -1,40 +1,38 @@
 {
-    "name": "bittorrent-utils",
-    "version": "3.0.0",
-    "description": "",
-    "main": "index.js",
-    "type": "module",
-    "scripts": {
-        "start": "cross-env NODE_ENV=user node index.js",
-        "dev": "cross-env NODE_ENV=dev nodemon index.js",
-        "lint": "eslint --fix --ext .js . && prettier --write ."
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "eslint": "^8.22.0",
-        "eslint-config-prettier": "^8.5.0",
-        "eslint-config-standard": "^17.0.0",
-        "eslint-plugin-import": "^2.26.0",
-        "eslint-plugin-n": "^15.2.4",
-        "eslint-plugin-promise": "^6.0.0",
-        "nodemon": "^2.0.19",
-        "prettier": "^2.7.1"
-    },
-    "dependencies": {
-        "@grpc/grpc-js": "^1.7.0",
-        "@grpc/proto-loader": "^0.7.2",
-        "@influxdata/influxdb-client": "^1.29.0",
-        "b58": "^4.0.3",
-        "colors": "^1.4.0",
-        "cross-env": "^7.0.3",
-        "find-process": "^1.4.7",
-        "keccak": "^3.0.2",
-        "loglevel": "^1.8.0",
-        "node-fetch": "^3.2.10",
-        "protobufjs": "^7.1.1",
-        "secp256k1": "^4.0.3",
-        "semver": "^7.3.7"
-    }
+  "name": "bittorrent-utils",
+  "version": "3.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=user node index.js",
+    "dev": "cross-env NODE_ENV=dev node --watch index.js",
+    "lint": "eslint --fix --ext .js . && prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.4.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.7.0",
+    "@grpc/proto-loader": "^0.7.2",
+    "@influxdata/influxdb-client": "^1.29.0",
+    "b58": "^4.0.3",
+    "colors": "^1.4.0",
+    "cross-env": "^7.0.3",
+    "find-process": "^1.4.7",
+    "keccak": "^3.0.2",
+    "loglevel": "^1.8.0",
+    "protobufjs": "^7.1.1",
+    "secp256k1": "^4.0.3",
+    "semver": "^7.3.7"
+  }
 }

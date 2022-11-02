@@ -24,13 +24,13 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Windows
 
-- Install [Node.js](https://nodejs.org/en/) if not installed already. Recommended version is [v16.16.0](https://nodejs.org/download/release/v16.16.0/)
+- Install [Node.js](https://nodejs.org/en/) if not installed already. Recommended version is [v19.0.0](https://nodejs.org/download/release/v19.0.0/)
 
 - [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip this repository or use git clone:
 
-    ```bash
-    git clone https://github.com/UkrainianHulk/bittorrent-utils
-    ```
+  ```bash
+  git clone https://github.com/UkrainianHulk/bittorrent-utils
+  ```
 
 - Edit `bittorrent-utils/config/user.js`
 
@@ -40,27 +40,27 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 - Install Node.js and Git if not installed already:
 
-    ```bash
-    apt update && apt install nodejs git
-    ```
+  ```bash
+  apt update && apt install nodejs git
+  ```
 
 - Clone this repository:
 
-    ```bash
-    git clone https://github.com/UkrainianHulk/bittorrent-utils
-    ```
+  ```bash
+  git clone https://github.com/UkrainianHulk/bittorrent-utils
+  ```
 
 - Edit configuration file:
 
-    ```bash
-    nano bittorrent-utils/config/user.js
-    ```
+  ```bash
+  nano bittorrent-utils/config/user.js
+  ```
 
 - Navigate to script directory and start it:
 
-    ```bash
-    cd bittorrent-utils && npm start
-    ```
+  ```bash
+  cd bittorrent-utils && npm start
+  ```
 
 ## Setup
 
@@ -71,21 +71,19 @@ This script is designed as one instance per BitTorrent/uTorrent client.
 The script provides two config files:
 
 1. User config file location: `bittorrent-utils/config/user.js`
-    - the settings from this file overwrite the default settings from the `default.js` file
-    - **edit `user.js`** file to configure your instance of script
+   - the settings from this file overwrite the default settings from the `default.js` file
+   - **edit `user.js`** file to configure your instance of script
 2. Default config file location: `bittorrent-utils/config/default.js`
-    - a file with the default settings, you can find here all possible options
-    - **avoid editing `default.js`** file in favor of editing `user.js` file
+   - a file with the default settings, you can find here all possible options
+   - **avoid editing `default.js`** file in favor of editing `user.js` file
 
 ## FAQ
 
 - > **Q: How to send desired amount of in-app BTT to others?** \
   > **A:** Run `bittorrent-utils/MANUAL_TRANSFER.bat` and follow the instructions
-  
 - > **Q: Where can i find bittorrent speed port?** \
   > **A:** Navigate folder `C:\Users\[USER]\AppData\Local\BitTorrentHelper\port` or in browser URL bar BitTorrent Speed web interface is opened: \
   > ![BitTorrent Speed URL in browser URL bar](screenshots/10.png?raw=true)
-  
 - > **Q: How to get access token?** \
   > **A:** Navigate in the browser <http://127.0.0.1:[BITTORRENT_SPEED_PORT]/api/token>
 
