@@ -40,6 +40,7 @@ async function healthCheck() {
       await killBitTorrent()
       await removeBitTorrentHelperData()
       execFile(bitTorrentFilePath)
+      failedAttemps = 0
     }
     throw error
   }
