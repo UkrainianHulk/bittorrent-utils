@@ -1,19 +1,20 @@
+import path from 'node:path'
 import { readFile } from 'node:fs/promises'
 import { URL } from 'node:url'
 
 class BitTorrentSpeed {
-  #url
-  #token
   #password
   #passwordForced
-  #portFilePath
   #port
+  #portFilePath
   #privateKey
+  #token
+  #url
 
-  constructor({ password, passwordForced, portFilePath }) {
+  constructor({ password, passwordForced, installationPath }) {
     this.#password = password
     this.#passwordForced = passwordForced
-    this.#portFilePath = portFilePath
+    this.#portFilePath = path.join(installationPath, 'port')
   }
 
   async #readPort() {
@@ -46,9 +47,7 @@ class BitTorrentSpeed {
     if (response.status === 403) this.resetAuth()
     if (response.status !== 200) {
       const responseText = (await response.text()).replace(/^\s+|\s+$/g, '')
-      throw new Error(
-        `${response.status} ${response.statusText}: ${responseText}`
-      )
+      throw new Error(`${response.status} ${response.statusText}: ${responseText}`)
     }
     return response.text()
   }
@@ -82,6 +81,11 @@ class BitTorrentSpeed {
       method: 'POST',
       body: Buffer.from('false')
     })
+  }
+
+  async getStatus() {
+    const url = new URL('status', await this.#getUrl())
+    return await this.#authorizedRequest(url)
   }
 }
 

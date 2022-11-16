@@ -24,12 +24,9 @@ export default class Logger {
 
   debug = (msg) => log.debug(timestamp(), 'DEBUG'.gray, `[${this.#name}]`, msg)
 
-  info = (msg) =>
-    log.info(timestamp(), 'INFO'.brightBlue, `[${this.#name}]`, msg)
+  info = (msg) => log.info(timestamp(), 'INFO'.brightBlue, `[${this.#name}]`, msg)
 
-  warn = (msg) =>
-    log.warn(timestamp(), 'WARN'.brightYellow, `[${this.#name}]`, msg)
+  warn = (msg) => log.warn(timestamp(), 'WARN'.brightYellow, `[${this.#name}]`, msg)
 
-  error = (msg) =>
-    log.error(timestamp(), 'ERROR'.brightRed, `[${this.#name}]`, msg)
+  error = (msg) => log.error(timestamp(), 'ERROR'.brightRed, `[${this.#name}]`, msg)
 }

@@ -6,14 +6,9 @@ import { PrivateKey } from '../libs/keys.js'
 const { DEV_FEE_PERCENT } = config
 
 const devFeePercent = numberToPercent(DEV_FEE_PERCENT)
-const devPublicKeyStr =
-  'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk='
+const devPublicKeyStr = 'BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk='
 
-export default async function ({
-  payerPrivateKeyStr,
-  recipientPublicKeyStr,
-  amount
-}) {
+export default async function ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) {
   const privateKey = new PrivateKey(payerPrivateKeyStr)
   const payerBalance = await getBalance(privateKey.public.string)
 

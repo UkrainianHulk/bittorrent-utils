@@ -1,12 +1,7 @@
 import { setTimeout } from 'node:timers/promises'
 import config from '../libs/config.js'
 import bitTorrent from '../services/bitTorrentClient.js'
-import {
-  msToDHMS,
-  bytesToGB,
-  GBtoBytes,
-  setStringLength
-} from '../libs/utils.js'
+import { msToDHMS, bytesToGB, GBtoBytes, setStringLength } from '../libs/utils.js'
 import Logger from '../libs/Logger.js'
 
 const {
@@ -44,10 +39,7 @@ function extractSizeEccess(torrents, index = 0) {
 function extractAmountEccess(torrents) {
   torrents.sort((a, b) => b.added - a.added)
   if (torrents.length > AUTOREMOVE_TORRENTS_MAX_AMOUNT) {
-    return torrents.splice(
-      AUTOREMOVE_TORRENTS_MAX_AMOUNT,
-      torrents.length - AUTOREMOVE_TORRENTS_MAX_AMOUNT
-    )
+    return torrents.splice(AUTOREMOVE_TORRENTS_MAX_AMOUNT, torrents.length - AUTOREMOVE_TORRENTS_MAX_AMOUNT)
   }
   return []
 }

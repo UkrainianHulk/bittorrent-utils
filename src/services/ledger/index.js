@@ -15,10 +15,7 @@ const packageDefinition = protoLoader.loadSync(ledgerProtoPath, {
   oneofs: true
 })
 const PackageObject = loadPackageDefinition(packageDefinition).ledger
-const ledgerClient = new PackageObject.Channels(
-  grpcAdress,
-  credentials.createSsl()
-)
+const ledgerClient = new PackageObject.Channels(grpcAdress, credentials.createSsl())
 
 export const getBalance = (publicKeyStr) =>
   new Promise((resolve, reject) => {
@@ -34,11 +31,7 @@ export const getBalance = (publicKeyStr) =>
     })
   })
 
-export const transfer = ({
-  payerPrivateKeyStr,
-  recipientPublicKeyStr,
-  amount
-}) =>
+export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) =>
   new Promise((resolve, reject) => {
     const payerPrivateKeyObject = new PrivateKey(payerPrivateKeyStr)
     const recipientPublicKeyObject = new PublicKey(recipientPublicKeyStr)
@@ -49,17 +42,10 @@ export const transfer = ({
       amount: BTTtoUBTT(amount)
     }
 
-    const TransferRequestMessageType = ledgerProto.lookupType(
-      'ledger.TransferRequest'
-    )
-    const TransferRequestMessage =
-      TransferRequestMessageType.create(transferRequest)
-    const serializedTransferRequestMessage = TransferRequestMessageType.encode(
-      TransferRequestMessage
-    ).finish()
-    const signature = payerPrivateKeyObject.hashAndSign(
-      serializedTransferRequestMessage
-    )
+    const TransferRequestMessageType = ledgerProto.lookupType('ledger.TransferRequest')
+    const TransferRequestMessage = TransferRequestMessageType.create(transferRequest)
+    const serializedTransferRequestMessage = TransferRequestMessageType.encode(TransferRequestMessage).finish()
+    const signature = payerPrivateKeyObject.hashAndSign(serializedTransferRequestMessage)
 
     const request = {
       transfer_request: transferRequest,

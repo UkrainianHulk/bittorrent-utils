@@ -54,10 +54,7 @@ const askAmount = async (balance) => {
   }
 
   if (balance < devFeePercent * amountInt + amountInt) {
-    console.error(
-      `Not anough balance ${devFeePercent ? 'considering the commission' : ''}`
-        .brightRed
-    )
+    console.error(`Not anough balance ${devFeePercent ? 'considering the commission' : ''}`.brightRed)
     return await askAmount(balance)
   }
 
@@ -65,14 +62,10 @@ const askAmount = async (balance) => {
 }
 
 const askConfirmation = async () => {
-  const confirmation = await rl.question(
-    `Type "YES" to confirm the transaction:\n`
-  )
+  const confirmation = await rl.question(`Type "YES" to confirm the transaction:\n`)
 
   if (confirmation !== 'YES') {
-    console.error(
-      `Wrong confirmation. Please type "YES" or close the app`.brightRed
-    )
+    console.error(`Wrong confirmation. Please type "YES" or close the app`.brightRed)
     return askConfirmation()
   }
 
@@ -81,10 +74,7 @@ const askConfirmation = async () => {
 
 async function run() {
   console.log(`You have launched the BTT in-app transfer utility.`)
-  console.log(
-    `Follow the program prompts and ` +
-      `remember to check input data twice!`.cyan
-  )
+  console.log(`Follow the program prompts and ` + `remember to check input data twice!`.cyan)
   const payer = await askPayer()
   rl.pause()
   const payerBalance = await getBalance(payer.public.string)

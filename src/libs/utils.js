@@ -34,9 +34,7 @@ export function msToDHMS(time) {
 }
 
 export function setStringLength(string, maxLength) {
-  return string.length > maxLength
-    ? string.substring(0, maxLength - 3) + '...'
-    : string.padEnd(maxLength, ' ')
+  return string.length > maxLength ? string.substring(0, maxLength - 3) + '...' : string.padEnd(maxLength, ' ')
 }
 
 export function getLocalIp() {

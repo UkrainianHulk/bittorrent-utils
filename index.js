@@ -1,12 +1,7 @@
 import config from './src/libs/config.js'
 
-const {
-  AUTOTRANSFER_ENABLED,
-  AUTOREMOVE_ENABLED,
-  PEERS_FILTER_ENABLED,
-  AUTOCONFIG_ENABLED,
-  HEALTHCHECK_ENABLED
-} = config
+const { AUTOTRANSFER_ENABLED, AUTOREMOVE_ENABLED, PEERS_FILTER_ENABLED, AUTOCONFIG_ENABLED, HEALTHCHECK_ENABLED } =
+  config
 
 if (AUTOTRANSFER_ENABLED) {
   ;(await import('./src/modules/autoTransfer.js')).start()

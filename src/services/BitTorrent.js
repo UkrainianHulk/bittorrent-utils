@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import path from 'node:path'
 import { URL } from 'node:url'
 
 class Torrent {
@@ -42,47 +43,37 @@ class Peer {
 }
 
 class BitTorrent {
+  #guid
+  #guiPassword
   #guiUrl
   #guiUsername
-  #guiPassword
   #ipFilterFilePath
   #token
-  #guid
 
-  constructor({ guiUrl, guiUsername, guiPassword, ipFilterFilePath }) {
+  constructor({ guiUrl, guiUsername, guiPassword, installationPath }) {
     this.#guiUrl = guiUrl
     this.#guiUsername = guiUsername
     this.#guiPassword = guiPassword
-    this.#ipFilterFilePath = ipFilterFilePath
+    this.#ipFilterFilePath = path.join(installationPath, 'ipfilter.dat')
   }
 
   async #authorize() {
     if (this.#token && this.#guid) return
     const url = new URL('token.html', this.#guiUrl)
-    const authString =
-      'Basic ' +
-      Buffer.from(this.#guiUsername + ':' + this.#guiPassword).toString(
-        'base64'
-      )
+    const authString = 'Basic ' + Buffer.from(this.#guiUsername + ':' + this.#guiPassword).toString('base64')
     const response = await fetch(url.href, {
       headers: { Authorization: authString }
     })
     if (response.status !== 200) throw new Error(response.statusText)
     const responseBody = await response.text()
     this.#token = responseBody.match(/(?<=>)\S+?(?=<)/)[0]
-    this.#guid = response.headers
-      .get('set-cookie')
-      .match(/(?<=GUID=)\S+?(?=\b)/)[0]
+    this.#guid = response.headers.get('set-cookie').match(/(?<=GUID=)\S+?(?=\b)/)[0]
   }
 
   async #authorizedRequest(url) {
     await this.#authorize()
     url.searchParams.set('token', this.#token)
-    const authString =
-      'Basic ' +
-      Buffer.from(this.#guiUsername + ':' + this.#guiPassword).toString(
-        'base64'
-      )
+    const authString = 'Basic ' + Buffer.from(this.#guiUsername + ':' + this.#guiPassword).toString('base64')
     const response = await fetch(url.href, {
       headers: {
         Authorization: authString,
@@ -92,9 +83,7 @@ class BitTorrent {
     if (response.status !== 200) {
       this.resetAuth()
       const responseText = (await response.text()).replace(/^\s+|\s+$/g, '')
-      throw new Error(
-        `${response.status} ${response.statusText}: ${responseText}`
-      )
+      throw new Error(`${response.status} ${response.statusText}: ${responseText}`)
     }
     return response.json()
   }

@@ -26,8 +26,7 @@ export class PrivateKey {
     if (!secp256k1.privateKeyVerify(this.#buffer)) {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
-    const publicKeyString =
-      PrivateKey.privateKeyStringToPublicKeyString(privateKeyString)
+    const publicKeyString = PrivateKey.privateKeyStringToPublicKeyString(privateKeyString)
     this.#public = new PublicKey(publicKeyString)
   }
 
@@ -37,20 +36,14 @@ export class PrivateKey {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
     const compressed = Buffer.from(secp256k1.publicKeyCreate(privateKeyBuffer))
-    const uncompressed = Buffer.from(
-      secp256k1.publicKeyConvert(compressed, false)
-    )
+    const uncompressed = Buffer.from(secp256k1.publicKeyConvert(compressed, false))
     return uncompressed.toString('base64')
   }
 
   hashAndSign(message) {
     const messageHash = crypto.createHash('sha256').update(message).digest()
     const signature = secp256k1.ecdsaSign(messageHash, this.#buffer).signature
-    const verified = secp256k1.ecdsaVerify(
-      signature,
-      messageHash,
-      this.#public.uncompressedUint8Array
-    )
+    const verified = secp256k1.ecdsaVerify(signature, messageHash, this.#public.uncompressedUint8Array)
     if (!verified) throw new Error('Signature verification failed')
     return secp256k1.signatureExport(signature)
   }
@@ -84,9 +77,7 @@ export class PublicKey {
     if (!secp256k1.publicKeyVerify(this.#bufferUncompressed)) {
       throw new Error(`Public key ${publicKeyString} verification failed`)
     }
-    this.#bufferCompressed = Buffer.from(
-      secp256k1.publicKeyConvert(this.#bufferUncompressed, true)
-    )
+    this.#bufferCompressed = Buffer.from(secp256k1.publicKeyConvert(this.#bufferUncompressed, true))
     if (!secp256k1.publicKeyVerify(this.#bufferCompressed)) {
       throw new Error(`Public key ${publicKeyString} verification failed`)
     }
@@ -95,10 +86,7 @@ export class PublicKey {
 
   toTronAdress() {
     const P = this.#bufferUncompressed.slice(1, 65)
-    const slicedKeccak256 = createKeccakHash('keccak256')
-      .update(P)
-      .digest()
-      .slice(12, 32)
+    const slicedKeccak256 = createKeccakHash('keccak256').update(P).digest().slice(12, 32)
     const prefix = Buffer.from([parseInt('0x41')])
     const H = Buffer.concat([prefix, slicedKeccak256])
     const h1 = crypto.createHash('sha256').update(H).digest()

@@ -18,10 +18,7 @@ let ipFilterResetTimestamp = 0
 async function peersFilter() {
   const nowTimestamp = Date.now()
 
-  if (
-    nowTimestamp - ipFilterResetTimestamp >
-    PEERS_FILTER_RESET_INTERVAL_MINUTES * 60 * 1000
-  ) {
+  if (nowTimestamp - ipFilterResetTimestamp > PEERS_FILTER_RESET_INTERVAL_MINUTES * 60 * 1000) {
     await bitTorrent.resetIpFilter()
     ipFilterResetTimestamp = nowTimestamp
     log.info('Peers filter reset')
@@ -30,9 +27,7 @@ async function peersFilter() {
   const torrents = await bitTorrent.getTorrents()
   const torrentHashes = torrents.map((torrent) => torrent.hash)
   const peers = await bitTorrent.getPeers(torrentHashes)
-  const unsuitablePeers = peers.filter((peer) =>
-    isPeerUnsuitable(peer, torrents)
-  )
+  const unsuitablePeers = peers.filter((peer) => isPeerUnsuitable(peer, torrents))
 
   if (!unsuitablePeers.length) return
 
@@ -51,24 +46,15 @@ function parseClientVersion(clientName) {
 function isClientWithBTT(clientName) {
   const clientVersion = parseClientVersion(clientName)
 
-  if (
-    clientName.startsWith('BitTorrent') &&
-    semver.satisfies(clientVersion, PEERS_FILTER_BITTORRENT_VERSION)
-  ) {
+  if (clientName.startsWith('BitTorrent') && semver.satisfies(clientVersion, PEERS_FILTER_BITTORRENT_VERSION)) {
     return true
   }
 
-  if (
-    clientName.startsWith('μTorrent') &&
-    semver.satisfies(clientVersion, PEERS_FILTER_UTORRENT_VERSION)
-  ) {
+  if (clientName.startsWith('μTorrent') && semver.satisfies(clientVersion, PEERS_FILTER_UTORRENT_VERSION)) {
     return true
   }
 
-  if (
-    clientName.startsWith('libtorrent') &&
-    semver.satisfies(clientVersion, PEERS_FILTER_LIBTORRENT_VERSION)
-  ) {
+  if (clientName.startsWith('libtorrent') && semver.satisfies(clientVersion, PEERS_FILTER_LIBTORRENT_VERSION)) {
     return true
   }
 
@@ -77,9 +63,7 @@ function isClientWithBTT(clientName) {
 
 function isPeerUnsuitable(peer, torrents) {
   const clientWithBTT = isClientWithBTT(peer.client)
-  const torrentStatus = torrents.find(
-    (torrent) => torrent.hash === peer.torrentHash
-  ).status
+  const torrentStatus = torrents.find((torrent) => torrent.hash === peer.torrentHash).status
 
   if (clientWithBTT) return false
 
