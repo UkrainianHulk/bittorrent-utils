@@ -6,8 +6,8 @@ import { setTimeout } from 'timers/promises'
 import findProcess from 'find-process'
 import Logger from '../libs/Logger.js'
 import config from '../libs/config.js'
-import bitTorrent from '../services/bitTorrentClient.js'
-import BitTorrentSpeed from '../services/BitTorrentSpeed.js'
+import bitTorrentClient from '../services/bitTorrentClient.js'
+import bitTorrentSpeedClient from '../services/bitTorrentSpeedClient.js'
 
 const {
   HEALTHCHECK_INTERVAL_SECONDS,
@@ -31,7 +31,7 @@ async function removeBitTorrentHelperData() {
 
 async function healthCheck() {
   try {
-    Promise.all([await bitTorrent.healthCheck(), await BitTorrentSpeed.getStatus()])
+    Promise.all([await bitTorrentClient.healthCheck(), await bitTorrentSpeedClient.getStatus()])
     failedAttemps = 0
   } catch (error) {
     failedAttemps += 1
@@ -39,6 +39,8 @@ async function healthCheck() {
     if (failedAttemps >= HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART) {
       await killBitTorrent()
       await removeBitTorrentHelperData()
+      bitTorrentClient.resetAuth()
+      bitTorrentSpeedClient.resetAuth()
       execFile(bitTorrentFilePath)
       failedAttemps = 0
     }
