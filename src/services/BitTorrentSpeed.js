@@ -55,6 +55,7 @@ class BitTorrentSpeed {
   resetAuth() {
     this.#token = null
     this.#port = null
+    this.#url = null
   }
 
   async resetPassword(newPassword) {
