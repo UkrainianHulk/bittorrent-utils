@@ -34,8 +34,7 @@ async function peersFilter() {
   await bitTorrent.addToIpsFilter(unsuitablePeers.map((peer) => peer.ip))
   await bitTorrent.reloadIpFilter()
 
-  log.info(`Banned ${unsuitablePeers.length} new peer(s)`)
-  log.debug(unsuitablePeers.map((peer) => peer.client).join(', '))
+  log.info(`Banned ${unsuitablePeers.length} new peer(s): ${unsuitablePeers.map((peer) => peer.client).join(', ')}`)
 }
 
 function parseClientVersion(clientName) {
