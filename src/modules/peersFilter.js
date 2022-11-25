@@ -38,7 +38,7 @@ async function peersFilter() {
 }
 
 function isClientWithBTT(clientName) {
-  const clientVersion = clientName.match(/\d\.(\d+\.?)+/)[0]
+  const clientVersion = clientName.match(/\d\.(\d+\.?)+/)?.[0]
 
   if (clientName.startsWith('BitTorrent') && semver.satisfies(clientVersion, PEERS_FILTER_BITTORRENT_VERSION)) {
     return true
