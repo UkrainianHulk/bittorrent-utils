@@ -7,10 +7,10 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Features
 
-- **Transfering IN-APP BTT**: transfer IN-APP BTT between wallets
-- **Transfering IN-APP BTT automatically**: collect IN-APP BTT automatically from your wallet to avoid losing them while downloading
+- **Transfering IN-APP BTTC**: transfer IN-APP BTTС between wallets
+- **Transfering IN-APP BTTC automatically**: collect IN-APP BTTC automatically from your wallet to avoid losing them while downloading
 - **Removing unnecessary torrents**: space-dependent and/or amount-dependent automatic removal of torrents
-- **Peers filtering**: exclude peers that use no-BTT clients
+- **Peers filtering**: exclude peers that use no-BTTС clients
 - **Configurating BitTorrent & μTorrent**: fast configure µTorrent/BitTorrent clients with optimal settings
 - **Health checking and restart**: automatically restart µTorrent/BitTorrent client if it crashes
 - **Cross-platform**: windows and linux compatible
@@ -79,7 +79,7 @@ The script provides two config files:
 
 ## FAQ
 
-- > **Q: How to send desired amount of in-app BTT to others?** \
+- > **Q: How to send desired amount of in-app BTTC to others?** \
   > **A:** Run `bittorrent-utils/MANUAL_TRANSFER.bat` and follow the instructions
 - > **Q: Where can i find bittorrent speed port?** \
   > **A:** Navigate folder `C:\Users\[USER]\AppData\Local\BitTorrentHelper\port` or in browser URL bar BitTorrent Speed web interface is opened: \
@@ -104,8 +104,8 @@ The script provides two config files:
 
 ## Donations
 
-- BTT/TRX/USDT (TRX20) TTijwYsndktUJbCHuW5oNPBWoWrJ5RV1iW
-- BTT (in-app) BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=
+- BTTC/TRX/USDT (TRX20) TTijwYsndktUJbCHuW5oNPBWoWrJ5RV1iW
+- BTTC (in-app) BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=
 
 ## [License](https://github.com/UkrainianHulk/bittorrent-utils/blob/main/LICENSE)
 
