@@ -1,6 +1,6 @@
 # BitTorrent Utilities
 
-Convenient and safe assistant for BTT farming </br>
+Convenient and safe assistant for BTTС farming </br>
 Community - [Telegram](https://t.me/bittorrent_utils)
 
 ## Quick overview
