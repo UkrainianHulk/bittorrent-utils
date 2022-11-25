@@ -38,7 +38,7 @@ async function peersFilter() {
 }
 
 function isClientWithBTT(clientName) {
-  const clientVersion = semver.coerce(clientName).version
+  const clientVersion = semver.coerce(clientName)
 
   if (clientName.startsWith('BitTorrent') && semver.satisfies(clientVersion, PEERS_FILTER_BITTORRENT_VERSION)) {
     return true
