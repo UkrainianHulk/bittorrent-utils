@@ -37,13 +37,8 @@ async function peersFilter() {
   log.info(`Banned ${unsuitablePeers.length} new peer(s): ${unsuitablePeers.map((peer) => peer.client).join(', ')}`)
 }
 
-function parseClientVersion(clientName) {
-  const match = clientName.match(/\d+\.\d+\.\d+/)
-  return match ? match[0] : null
-}
-
 function isClientWithBTT(clientName) {
-  const clientVersion = parseClientVersion(clientName)
+  const clientVersion = clientName.match(/\d\.(\d+\.?)+/)[0]
 
   if (clientName.startsWith('BitTorrent') && semver.satisfies(clientVersion, PEERS_FILTER_BITTORRENT_VERSION)) {
     return true
