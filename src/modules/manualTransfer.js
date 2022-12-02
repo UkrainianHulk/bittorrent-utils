@@ -38,7 +38,7 @@ const askRecipient = async () => {
 }
 
 const askAmount = async (balance) => {
-  const amount = await rl.question(`Enter BTT amount:\n`)
+  const amount = await rl.question(`Enter BTTC amount:\n`)
   const isAmountCorrect = /^\d+([,.]\d{1,6})?$/.test(amount)
 
   if (isAmountCorrect === false) {
@@ -73,7 +73,7 @@ const askConfirmation = async () => {
 }
 
 async function run() {
-  console.log(`You have launched the BTT in-app transfer utility.`)
+  console.log(`You have launched the BTTC in-app transfer utility.`)
   console.log(`Follow the program prompts and ` + `remember to check input data twice!`.cyan)
   const payer = await askPayer()
   rl.pause()

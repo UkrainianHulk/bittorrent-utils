@@ -53,8 +53,8 @@ async function autoTransfer() {
   const newRecipientBalance = await getBalance(AUTOTRANSFER_TO)
   const equivalent = price * newRecipientBalance
   const equivalentStr = (equivalent.toFixed(2).toLocaleString() + ' USDT').brightGreen
-  const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTT').brightMagenta
-  const newBalanceStr = (newRecipientBalance.toLocaleString() + ' BTT').brightMagenta
+  const paymentAmountStr = (paymentAmount.toLocaleString() + ' BTTC').brightMagenta
+  const newBalanceStr = (newRecipientBalance.toLocaleString() + ' BTTC').brightMagenta
 
   log.info(`${paymentAmountStr} -> ${newBalanceStr} (${equivalentStr})`)
 }
