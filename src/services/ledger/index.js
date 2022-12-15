@@ -2,7 +2,7 @@ import { loadPackageDefinition, credentials } from '@grpc/grpc-js'
 import protoLoader from '@grpc/proto-loader'
 import protobuf from 'protobufjs'
 import { PrivateKey, PublicKey } from '../../libs/keys.js'
-import { UBTTtoBTT, BTTtoUBTT } from '../../libs/utils.js'
+import { UBTTtoBTTC, BTTCtoUBTT } from '../../libs/utils.js'
 
 const grpcAdress = 'ledger.bt.co:443'
 const ledgerProtoPath = './src/services/Ledger/protos/ledger.proto'
@@ -26,7 +26,7 @@ export const getBalance = (publicKeyStr) =>
       if (error) return reject(error)
       const balanceUbttStr = response.account.balance
       const balanceUbttInt = parseInt(balanceUbttStr)
-      const balanceBttInt = UBTTtoBTT(balanceUbttInt)
+      const balanceBttInt = UBTTtoBTTC(balanceUbttInt)
       resolve(balanceBttInt)
     })
   })
@@ -39,7 +39,7 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
     const transferRequest = {
       payer: { key: payerPrivateKeyObject.public.bufferUncompressed },
       recipient: { key: recipientPublicKeyObject.bufferUncompressed },
-      amount: BTTtoUBTT(amount)
+      amount: BTTCtoUBTT(amount)
     }
 
     const TransferRequestMessageType = ledgerProto.lookupType('ledger.TransferRequest')
@@ -54,6 +54,6 @@ export const transfer = ({ payerPrivateKeyStr, recipientPublicKeyStr, amount }) 
 
     ledgerClient.Transfer(request, function (error, response) {
       if (error) reject(error)
-      else resolve(UBTTtoBTT(response.balance))
+      else resolve(UBTTtoBTTC(response.balance))
     })
   })

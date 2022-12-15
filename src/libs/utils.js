@@ -4,11 +4,11 @@ export function numberToPercent(number) {
   return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
 }
 
-export function UBTTtoBTT(amount) {
+export function UBTTtoBTTC(amount) {
   return amount / 1000
 }
 
-export function BTTtoUBTT(amount) {
+export function BTTCtoUBTT(amount) {
   return amount * 1000
 }
 

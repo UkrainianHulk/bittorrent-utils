@@ -10,7 +10,7 @@ class InfluxDBClass {
   }
 
   async pushTransferData({ tag, localIp, publicIp, amount }) {
-    const point = new Point('BTT')
+    const point = new Point('BTTC')
       .tag('tag', tag)
       .tag('local_ip', localIp)
       .tag('public_ip', publicIp)
