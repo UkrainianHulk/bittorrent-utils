@@ -8,7 +8,7 @@ import { getBalance } from '../services/ledger/index.js'
 import { getBttPrice } from '../services/binance.js'
 import { getPublicIp } from '../services/apify.js'
 import influxDB from '../services/influxDBClient.js'
-import { getLocalIp } from '../libs/utils.js'
+import { getLocalIp, untilSuccess } from '../libs/utils.js'
 
 const {
   AUTOTRANSFER_TO,
@@ -21,7 +21,7 @@ const {
 
 const log = new Logger('autotransfer')
 const localIp = AUTOTRANSFER_INFLUXDB_ENABLED && getLocalIp()
-const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED && (await getPublicIp())
+const publicIp = AUTOTRANSFER_INFLUXDB_ENABLED && (await untilSuccess(getPublicIp, log.debug))
 
 async function getPayerPrivateKey() {
   if (AUTOTRANSFER_FROM === 'local') {

@@ -1,4 +1,5 @@
 import { networkInterfaces } from 'node:os'
+import { setTimeout } from 'node:timers/promises'
 
 export function numberToPercent(number) {
   return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
@@ -41,4 +42,14 @@ export function getLocalIp() {
   return Object.values(networkInterfaces())
     .flat()
     .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
+}
+
+export async function untilSuccess(func, log, delay = 5000) {
+  try {
+    return await func()
+  } catch (error) {
+    log(error)
+    await setTimeout(delay)
+    return untilSuccess(func, log, delay)
+  }
 }

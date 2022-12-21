@@ -34,22 +34,23 @@ async function peersFilter() {
   await bitTorrent.addToIpsFilter(unsuitablePeers.map((peer) => peer.ip))
   await bitTorrent.reloadIpFilter()
 
-  log.info(`Banned ${unsuitablePeers.length} new peer(s): ${unsuitablePeers.map((peer) => peer.client).join(', ')}`)
+  log.info(
+    `Banned ${unsuitablePeers.length} new peer(s): ${unsuitablePeers.map((peer) => peer.client).join(', ')}`
+  )
 }
 
 function isClientWithBTT(clientName) {
   const clientVersion = semver.coerce(clientName)
-  
+
   const clientsVersions = {
-    'BitTorrent': PEERS_FILTER_BITTORRENT_VERSION,
-    'μTorrent': PEERS_FILTER_UTORRENT_VERSION,
-    'libtorrent': PEERS_FILTER_LIBTORRENT_VERSION
+    BitTorrent: PEERS_FILTER_BITTORRENT_VERSION,
+    μTorrent: PEERS_FILTER_UTORRENT_VERSION,
+    libtorrent: PEERS_FILTER_LIBTORRENT_VERSION
   }
 
   for (const name in clientsVersions)
-    if (clientName.startsWith(name) && semver.satisfies(clientVersion, clientsVersions[name]))
-      return true
-      
+    if (clientName.startsWith(name) && semver.satisfies(clientVersion, clientsVersions[name])) return true
+
   return false
 }
 

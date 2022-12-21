@@ -29,6 +29,14 @@ async function removeBitTorrentHelperData() {
   return await fs.rm(BITTORRENT_SPEED_PATH, { recursive: true, force: true })
 }
 
+async function reset() {
+  await killBitTorrent()
+  await removeBitTorrentHelperData()
+  bitTorrentClient.resetAuth()
+  bitTorrentSpeedClient.resetAuth()
+  execFile(bitTorrentFilePath)
+}
+
 async function healthCheck() {
   try {
     Promise.all([await bitTorrentClient.healthCheck(), await bitTorrentSpeedClient.getStatus()])
@@ -37,11 +45,7 @@ async function healthCheck() {
     failedAttemps += 1
     log.warn(`Health check failed, attempts count: ${failedAttemps}`)
     if (failedAttemps >= HEALTHCHECK_FAILED_ATTEMPTS_BEFORE_RESTART) {
-      await killBitTorrent()
-      await removeBitTorrentHelperData()
-      bitTorrentClient.resetAuth()
-      bitTorrentSpeedClient.resetAuth()
-      execFile(bitTorrentFilePath)
+      await reset()
       failedAttemps = 0
     }
     throw error
