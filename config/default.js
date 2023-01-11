@@ -61,7 +61,7 @@ export default {
     dir_torrent_files: 'torrents',
     dir_torrent_files_flag: true,
     encryption_mode: 1,
-    max_active_downloads: 3,
+    max_active_downloads: 2,
     max_active_torrent: 15,
     max_dl_rate: 0,
     max_ul_rate: 0,
