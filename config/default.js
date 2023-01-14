@@ -63,7 +63,7 @@ export default {
     encryption_mode: 1,
     max_active_downloads: 5,
     max_active_torrent: 15,
-    max_dl_rate: 15000,
+    max_dl_rate: 10000,
     max_ul_rate: 0,
     'net.max_halfopen': 100,
     'offers.left_rail_offer_enabled': false,
