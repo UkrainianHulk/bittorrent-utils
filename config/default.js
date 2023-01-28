@@ -51,7 +51,7 @@ export default {
     'bt.graceful_shutdown': true,
     'bt.transp_disposition': 31,
     close_to_tray: false,
-    conns_globally: 200,
+    conns_globally: 1000,
     conns_per_torrent: 50,
     dir_active_download: 'path/to/downloads/dir',
     dir_active_download_flag: false,
