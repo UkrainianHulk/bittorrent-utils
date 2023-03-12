@@ -24,7 +24,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ### Windows
 
-- Install [Node.js](https://nodejs.org/en/) if not installed already. Recommended version is [v19.0.0](https://nodejs.org/download/release/v19.0.0/)
+- Install [Node.js](https://nodejs.org/en/) if not installed already. Recommended version is [v19.7.0](https://nodejs.org/download/release/v19.7.0/)
 
 - [Download](https://github.com/UkrainianHulk/bittorrent-utils/archive/refs/heads/main.zip) and unzip this repository or use git clone:
 
