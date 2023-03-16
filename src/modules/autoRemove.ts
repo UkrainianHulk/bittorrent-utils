@@ -1,7 +1,7 @@
 import { setTimeout } from 'node:timers/promises'
 import config from '../libs/config.js'
 import bitTorrent from '../services/bitTorrentClient.js'
-import { msToDHMS, bytesToGB, GBtoBytes, setStringLength } from '../libs/utils.js'
+import { msToDHMS, bytesToGB, GBtoBytes, cropString } from '../libs/utils.js'
 import Logger from '../libs/Logger.js'
 
 const {
@@ -68,7 +68,7 @@ async function autoRemove() {
   log.info('Torrents removal list:')
 
   generalRemovalList.forEach((torrent) => {
-    const name = setStringLength(torrent.name, 50)
+    const name = cropString(torrent.name, 50)
     const size = bytesToGB(torrent.size).toFixed(2) + ' GB'
     const ratio = (torrent.ratio / 1000).toFixed(2)
     const status = torrent.status

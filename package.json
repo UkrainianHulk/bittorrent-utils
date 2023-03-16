@@ -18,8 +18,8 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "eslint": "^8.36.0",
-    "eslint-config-standard-with-typescript": "^34.0.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
@@ -33,6 +33,7 @@
     "b58": "^4.0.3",
     "colors": "^1.4.0",
     "cross-env": "^7.0.3",
+    "deepmerge": "^4.3.0",
     "find-process": "^1.4.7",
     "keccak": "^3.0.2",
     "loglevel": "^1.8.0",

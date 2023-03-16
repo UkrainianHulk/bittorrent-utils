@@ -1,25 +1,22 @@
-import path from 'node:path'
-import { env, cwd } from 'node:process'
+import { resolve } from 'node:path';
+import { env, cwd } from 'node:process';
+import merge from 'deepmerge';
+import defaultConfig from '../../config/default.js';
 
 const { NODE_ENV } = env
 
-async function importConfig(name) {
-  const configPath = path.resolve(cwd(), 'config', name)
-  return import(`file://${configPath}.js`)
-}
-
-function merge(target, source) {
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object) {
-      Object.assign(source[key], merge(target[key], source[key]))
-    }
+async function importConfig(name: string): Promise<Partial<typeof defaultConfig>> {
+  try { 
+    const configPath = resolve(cwd(), 'config', name);
+    const imported = await import(`file://${configPath}.ts`);
+    return imported.default;
+  } catch (error) {
+    throw new Error (`Failed to import config "${name}"`)
   }
-  Object.assign(target || {}, source)
-  return target
 }
 
-const { default: defaultConfig } = await importConfig('default')
-const { default: environmentConfig } = await importConfig(NODE_ENV)
-const config = merge(defaultConfig, environmentConfig)
+const config = (NODE_ENV != null)
+  ? merge(defaultConfig, await importConfig(NODE_ENV))
+  : defaultConfig;
 
-export default config
+export default config;

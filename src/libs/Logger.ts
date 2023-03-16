@@ -1,12 +1,12 @@
 import 'colors'
-import log from 'loglevel'
+import log, { type LogLevelDesc } from 'loglevel'
 import config from './config.js'
 
 const { LOG_LEVEL } = config
 
-log.setDefaultLevel(LOG_LEVEL)
+log.setDefaultLevel(LOG_LEVEL as LogLevelDesc)
 
-const timestamp = () =>
+const timestamp = (): string =>
   new Date().toLocaleString('ru', {
     hour: 'numeric',
     minute: 'numeric',
@@ -20,13 +20,9 @@ export default class Logger {
     this.#name = name
   }
 
-  trace = (msg) => log.trace(timestamp(), 'TRACE'.gray, `[${this.#name}]`, msg)
-
-  debug = (msg) => log.debug(timestamp(), 'DEBUG'.gray, `[${this.#name}]`, msg)
-
-  info = (msg) => log.info(timestamp(), 'INFO'.brightBlue, `[${this.#name}]`, msg)
-
-  warn = (msg) => log.warn(timestamp(), 'WARN'.brightYellow, `[${this.#name}]`, msg)
-
-  error = (msg) => log.error(timestamp(), 'ERROR'.brightRed, `[${this.#name}]`, msg)
+  trace = (msg: string): void => log.trace(timestamp(), 'TRACE'.gray, `[${this.#name}]`, msg)
+  debug = (msg: string): void => log.debug(timestamp(), 'DEBUG'.gray, `[${this.#name}]`, msg)
+  info = (msg: string): void => log.info(timestamp(), 'INFO'.blue, `[${this.#name}]`, msg)
+  warn = (msg: string): void => log.warn(timestamp(), 'WARN'.yellow, `[${this.#name}]`, msg)
+  error = (msg: string): void => log.error(timestamp(), 'ERROR'.red, `[${this.#name}]`, msg)
 }

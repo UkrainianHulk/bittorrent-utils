@@ -1,55 +1,62 @@
 import { networkInterfaces } from 'node:os'
 import { setTimeout } from 'node:timers/promises'
+import { type log } from 'loglevel';
 
-export function numberToPercent(number) {
+export function numberToPercent(number: number): number {
   return (number > 0 ? (number > 100 ? 100 : number) : 0) / 100
 }
 
-export function UBTTtoBTTC(amount) {
+export function UBTTtoBTTC(amount: number): number {
   return amount / 1000
 }
 
-export function BTTCtoUBTT(amount) {
+export function BTTCtoUBTT(amount: number): number {
   return amount * 1000
 }
 
-export function bytesToGB(bytes) {
+export function bytesToGB(bytes: number): number {
   return bytes / 1024 / 1024 / 1024
 }
 
-export function GBtoBytes(GB) {
+export function GBtoBytes(GB: number): number {
   return GB * 1024 * 1024 * 1024
 }
 
-export function msToDHMS(time) {
+export function msToDHMS(timeMs: number): string {
   const SEC = 1e3
   const MIN = SEC * 60
   const HOUR = MIN * 60
   const DAY = HOUR * 24
-  const ms = Math.abs(time)
+  const ms = Math.abs(timeMs)
   const d = (ms / DAY) | 0
   const h = ((ms % DAY) / HOUR) | 0
   const m = ((ms % HOUR) / MIN) | 0
   const s = ((ms % MIN) / SEC) | 0
-  return `${time < 0 ? '-' : ''}${d}d ${h}h ${m}m ${s}s`
+  return `${timeMs < 0 ? '-' : ''}${d}d ${h}h ${m}m ${s}s`
 }
 
-export function setStringLength(string, maxLength) {
-  return string.length > maxLength ? string.substring(0, maxLength - 3) + '...' : string.padEnd(maxLength, ' ')
+export function cropString(string: string, maxLength: number): string {
+  return string.length > maxLength
+    ? string.substring(0, maxLength - 3) + '...'
+    : string.padEnd(maxLength, ' ')
 }
 
-export function getLocalIp() {
+export function getLocalIp(): string | undefined {
   return Object.values(networkInterfaces())
     .flat()
-    .find((i) => i?.family === 'IPv4' && !i?.internal)?.address
+    .find(i => i?.family === 'IPv4' && !i?.internal)?.address
 }
 
-export async function untilSuccess(func, log, delay = 5000) {
+export async function untilSuccess(
+  func: () => Promise<any>,
+  logger: typeof log,
+  delay = 5000
+): Promise<ReturnType<typeof func>> {
   try {
-    return await func()
+    return await func();
   } catch (error) {
-    log(error)
+    logger(error)
     await setTimeout(delay)
-    return untilSuccess(func, log, delay)
+    return await untilSuccess(func, logger, delay)
   }
 }
