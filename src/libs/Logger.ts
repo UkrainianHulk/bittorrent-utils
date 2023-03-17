@@ -1,10 +1,19 @@
 import 'colors'
-import log, { type LogLevelDesc } from 'loglevel'
+import log from 'loglevel'
 import config from './config.js'
 
 const { LOG_LEVEL } = config
 
-log.setDefaultLevel(LOG_LEVEL as LogLevelDesc)
+const logLevel = ({
+  TRACE: 'trace',
+  DEBUG: 'debug',
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error',
+  SILENT: 'silent'
+} as const)[LOG_LEVEL] ?? 'info';
+
+log.setDefaultLevel(logLevel)
 
 const timestamp = (): string =>
   new Date().toLocaleString('ru', {
