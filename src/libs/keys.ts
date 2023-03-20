@@ -1,38 +1,40 @@
 import crypto from 'node:crypto'
 import secp256k1 from 'secp256k1'
 import createKeccakHash from 'keccak'
-import base58 from 'b58'
+import base58 from 'bs58'
+
+createKeccakHash('keccak256')
 
 export class PrivateKey {
   #string
   #buffer
   #public
 
-  get string() {
+  get string(): string {
     return this.#string
   }
 
-  get buffer() {
+  get buffer(): Buffer {
     return this.#buffer
   }
 
-  get public() {
+  get public(): PublicKey {
     return this.#public
   }
 
-  constructor(privateKeyString) {
+  constructor(privateKeyString: string) {
     this.#string = privateKeyString
     this.#buffer = Buffer.from(privateKeyString, 'hex')
-    if (!secp256k1.privateKeyVerify(this.#buffer)) {
+    if (secp256k1.privateKeyVerify(this.#buffer) === false) {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
     const publicKeyString = PrivateKey.privateKeyStringToPublicKeyString(privateKeyString)
     this.#public = new PublicKey(publicKeyString)
   }
 
-  static privateKeyStringToPublicKeyString(privateKeyString) {
+  static privateKeyStringToPublicKeyString(privateKeyString: string): string {
     const privateKeyBuffer = Buffer.from(privateKeyString, 'hex')
-    if (!secp256k1.privateKeyVerify(privateKeyBuffer)) {
+    if (secp256k1.privateKeyVerify(privateKeyBuffer) === false) {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
     const compressed = Buffer.from(secp256k1.publicKeyCreate(privateKeyBuffer))
@@ -40,58 +42,56 @@ export class PrivateKey {
     return uncompressed.toString('base64')
   }
 
-  hashAndSign(message) {
+  hashAndSign(message: string): Uint8Array {
     const messageHash = crypto.createHash('sha256').update(message).digest()
     const signature = secp256k1.ecdsaSign(messageHash, this.#buffer).signature
     const verified = secp256k1.ecdsaVerify(signature, messageHash, this.#public.uncompressedUint8Array)
-    if (!verified) throw new Error('Signature verification failed')
+    if (verified === false) throw new Error('Signature verification failed')
     return secp256k1.signatureExport(signature)
   }
 }
 
 export class PublicKey {
   #string
-  #bufferCompressed
-  #bufferUncompressed
-  #uint8ArrayUncompressed
+  #compressedBuffer
+  #uncompressedBuffer
+  #uncompressedUint8Array
 
-  get string() {
+  get string(): string {
     return this.#string
   }
 
-  get bufferCompressed() {
-    return this.#bufferCompressed
+  get compressedBuffer(): Buffer {
+    return this.#compressedBuffer
   }
 
-  get bufferUncompressed() {
-    return this.#bufferUncompressed
+  get uncompressedBuffer(): Buffer {
+    return this.#uncompressedBuffer
   }
 
-  get uncompressedUint8Array() {
-    return this.#uint8ArrayUncompressed
+  get uncompressedUint8Array(): Uint8Array {
+    return this.#uncompressedUint8Array
   }
 
-  constructor(publicKeyString) {
+  constructor(publicKeyString: string) {
     this.#string = publicKeyString
-    this.#bufferUncompressed = Buffer.from(publicKeyString, 'base64')
-    if (!secp256k1.publicKeyVerify(this.#bufferUncompressed)) {
+    this.#uncompressedBuffer = Buffer.from(publicKeyString, 'base64')
+    if (secp256k1.publicKeyVerify(this.#uncompressedBuffer) === false)
       throw new Error(`Public key ${publicKeyString} verification failed`)
-    }
-    this.#bufferCompressed = Buffer.from(secp256k1.publicKeyConvert(this.#bufferUncompressed, true))
-    if (!secp256k1.publicKeyVerify(this.#bufferCompressed)) {
+    this.#compressedBuffer = Buffer.from(secp256k1.publicKeyConvert(this.#uncompressedBuffer, true))
+    if (secp256k1.publicKeyVerify(this.#compressedBuffer) === false)
       throw new Error(`Public key ${publicKeyString} verification failed`)
-    }
-    this.#uint8ArrayUncompressed = new Uint8Array(this.#bufferUncompressed)
+    this.#uncompressedUint8Array = new Uint8Array(this.#uncompressedBuffer)
   }
 
-  toTronAdress() {
-    const P = this.#bufferUncompressed.slice(1, 65)
+  toTronAddress(): string {
+    const P = this.#uncompressedBuffer.subarray(1, 65)
     const slicedKeccak256 = createKeccakHash('keccak256').update(P).digest().slice(12, 32)
     const prefix = Buffer.from([parseInt('0x41')])
     const H = Buffer.concat([prefix, slicedKeccak256])
     const h1 = crypto.createHash('sha256').update(H).digest()
     const h2 = crypto.createHash('sha256').update(h1).digest()
-    const tronAdress = base58.encode(Buffer.concat([H, h2.slice(0, 4)]))
-    return tronAdress
+    const tronAddress = base58.encode(Buffer.concat([H, h2.subarray(0, 4)]))
+    return tronAddress
   }
 }
