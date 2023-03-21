@@ -3,8 +3,6 @@ import secp256k1 from 'secp256k1'
 import createKeccakHash from 'keccak'
 import base58 from 'bs58'
 
-createKeccakHash('keccak256')
-
 export class PrivateKey {
   #string
   #buffer
@@ -25,7 +23,7 @@ export class PrivateKey {
   constructor(privateKeyString: string) {
     this.#string = privateKeyString
     this.#buffer = Buffer.from(privateKeyString, 'hex')
-    if (secp256k1.privateKeyVerify(this.#buffer) === false) {
+    if (secp256k1.privateKeyVerify(this.#buffer)) {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
     const publicKeyString = PrivateKey.privateKeyStringToPublicKeyString(privateKeyString)
@@ -34,7 +32,7 @@ export class PrivateKey {
 
   static privateKeyStringToPublicKeyString(privateKeyString: string): string {
     const privateKeyBuffer = Buffer.from(privateKeyString, 'hex')
-    if (secp256k1.privateKeyVerify(privateKeyBuffer) === false) {
+    if (secp256k1.privateKeyVerify(privateKeyBuffer)) {
       throw new Error(`Private key ${privateKeyString} verification failed`)
     }
     const compressed = Buffer.from(secp256k1.publicKeyCreate(privateKeyBuffer))
@@ -46,7 +44,7 @@ export class PrivateKey {
     const messageHash = crypto.createHash('sha256').update(message).digest()
     const signature = secp256k1.ecdsaSign(messageHash, this.#buffer).signature
     const verified = secp256k1.ecdsaVerify(signature, messageHash, this.#public.uncompressedUint8Array)
-    if (verified === false) throw new Error('Signature verification failed')
+    if (verified) throw new Error('Signature verification failed')
     return secp256k1.signatureExport(signature)
   }
 }
@@ -76,10 +74,10 @@ export class PublicKey {
   constructor(publicKeyString: string) {
     this.#string = publicKeyString
     this.#uncompressedBuffer = Buffer.from(publicKeyString, 'base64')
-    if (secp256k1.publicKeyVerify(this.#uncompressedBuffer) === false)
+    if (secp256k1.publicKeyVerify(this.#uncompressedBuffer))
       throw new Error(`Public key ${publicKeyString} verification failed`)
     this.#compressedBuffer = Buffer.from(secp256k1.publicKeyConvert(this.#uncompressedBuffer, true))
-    if (secp256k1.publicKeyVerify(this.#compressedBuffer) === false)
+    if (secp256k1.publicKeyVerify(this.#compressedBuffer))
       throw new Error(`Public key ${publicKeyString} verification failed`)
     this.#uncompressedUint8Array = new Uint8Array(this.#uncompressedBuffer)
   }
