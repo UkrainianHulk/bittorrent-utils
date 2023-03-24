@@ -4,9 +4,9 @@ import createKeccakHash from 'keccak'
 import base58 from 'bs58'
 
 export class PrivateKey {
-  #string
-  #buffer
-  #public
+  #string: string
+  #buffer: Buffer
+  #public: PublicKey
 
   get string(): string {
     return this.#string
@@ -50,10 +50,10 @@ export class PrivateKey {
 }
 
 export class PublicKey {
-  #string
-  #compressedBuffer
-  #uncompressedBuffer
-  #uncompressedUint8Array
+  #string: string
+  #compressedBuffer: Buffer
+  #uncompressedBuffer: Buffer
+  #uncompressedUint8Array: Uint8Array
 
   get string(): string {
     return this.#string
