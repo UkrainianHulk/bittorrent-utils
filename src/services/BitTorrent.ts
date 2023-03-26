@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { URL } from 'node:url';
-import { build } from 'protobufjs';
 
 export type TorrentData = [
   hash: string, // "0F91285A9005839172BB2CC8D8603FF2F0A66201"
@@ -569,7 +568,7 @@ class BitTorrent {
     this.#guid = undefined;
   }
 
-  async #authorizedRequest(url: URL): Promise<any> {
+  async #authorizedRequest<ResponseType>(url: URL): Promise<ResponseType> {
     const { token, guid } = await this.#authorize();
     url.searchParams.set('token', token);
     const response = await fetch(url.href, {
@@ -591,7 +590,7 @@ class BitTorrent {
   async getTorrents(): Promise<Torrent[]> {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('list', '1');
-    const data: TorrentsResponseData = await this.#authorizedRequest(url);
+    const data = await this.#authorizedRequest<TorrentsResponseData>(url);
     if (data.torrents === undefined) return [];
     return data.torrents.map(makeTorrent);
   }
@@ -603,7 +602,7 @@ class BitTorrent {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'getpeers');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    const data: PeersResponseData = await this.#authorizedRequest(url);
+    const data = await this.#authorizedRequest<PeersResponseData>(url);
     if (data.peers === undefined) return [];
 
     const peers = data.peers.reduce<Peer[]>((acc, item, index, list) => {
@@ -622,7 +621,7 @@ class BitTorrent {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'stop');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    return await this.#authorizedRequest(url);
+    return await this.#authorizedRequest<BuildResponseData>(url);
   }
 
   async deleteTorrents(
@@ -634,13 +633,13 @@ class BitTorrent {
     if (deleteFiles) url.searchParams.set('action', 'removedata');
     else url.searchParams.set('action', 'remove');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    return await this.#authorizedRequest(url);
+    return await this.#authorizedRequest<BuildResponseData>(url);
   }
 
   async getSettings(): Promise<Settings> {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'getsettings');
-    const data: SettingsResponseData = await this.#authorizedRequest(url);
+    const data = await this.#authorizedRequest<SettingsResponseData>(url);
     const settingsEntries = data.settings.map((item) => [item[0], item[2]]);
     const settings: Settings =
       Object.fromEntries(settingsEntries);
@@ -652,18 +651,18 @@ class BitTorrent {
   ): Promise<BuildResponseData> {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'setsetting');
-    for (const option in settings) {
+    Object.entries(settings).forEach(([option, value]) => {
       url.searchParams.append('s', option);
-      url.searchParams.append('v', settings[option as OptionName]);
-    }
-    return await this.#authorizedRequest(url);
+      url.searchParams.append('v', value);
+    });
+    return await this.#authorizedRequest<BuildResponseData>(url);
   }
 
   async addUrl(link: string): Promise<BuildResponseData> {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'add-url');
     url.searchParams.append('s', link);
-    return await this.#authorizedRequest(url);
+    return await this.#authorizedRequest<BuildResponseData>(url);
   }
 
   async reloadIpFilter(): Promise<void> {
