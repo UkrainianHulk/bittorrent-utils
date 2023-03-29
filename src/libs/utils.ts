@@ -41,10 +41,12 @@ export function cropString(string: string, maxLength: number): string {
     : string.padEnd(maxLength, ' ')
 }
 
-export function getLocalIp(): string | undefined {
-  return Object.values(networkInterfaces())
+export function getLocalIp(): string {
+  const localIp = Object.values(networkInterfaces())
     .flat()
     .find(i => i?.family === 'IPv4' && !i?.internal)?.address
+  if (localIp === undefined) throw new Error('Could not get local ip');
+  return localIp;
 }
 
 export async function untilSuccess(
