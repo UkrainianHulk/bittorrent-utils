@@ -1,6 +1,6 @@
-import 'colors'
 import log from 'loglevel'
 import config from './config.js'
+import chalk from 'chalk'
 
 const { LOG_LEVEL } = config
 
@@ -18,12 +18,15 @@ const logLevel =
 
 log.setDefaultLevel(logLevel)
 
-const timestamp = (): string =>
-  new Date().toLocaleString('ru', {
+const timestamp = (): string => {
+  const dateStr = new Date().toLocaleString('ru', {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
-  }).yellow
+  });
+
+  return chalk.yellow(dateStr);
+}
 
 export default class Logger {
   #name
@@ -33,22 +36,22 @@ export default class Logger {
   }
 
   trace = (msg: string): void => {
-    log.trace(timestamp(), 'TRACE'.gray, `[${this.#name}]`, msg)
+    log.trace(timestamp(), chalk.gray('TRACE'), `[${this.#name}]`, msg)
   }
 
   debug = (msg: string): void => {
-    log.debug(timestamp(), 'DEBUG'.gray, `[${this.#name}]`, msg)
+    log.debug(timestamp(), chalk.gray('DEBUG'), `[${this.#name}]`, msg)
   }
 
   info = (msg: string): void => {
-    log.info(timestamp(), 'INFO'.blue, `[${this.#name}]`, msg)
+    log.info(timestamp(), chalk.blue('INFO'), `[${this.#name}]`, msg)
   }
 
   warn = (msg: string): void => {
-    log.warn(timestamp(), 'WARN'.yellow, `[${this.#name}]`, msg)
+    log.warn(timestamp(), chalk.yellow('WARN'), `[${this.#name}]`, msg)
   }
 
   error = (msg: string): void => {
-    log.error(timestamp(), 'ERROR'.red, `[${this.#name}]`, msg)
+    log.error(timestamp(), chalk.red('ERROR'), `[${this.#name}]`, msg)
   }
 }

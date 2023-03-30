@@ -1,6 +1,6 @@
-import 'colors'
 import { stdin, stdout } from 'node:process'
 import { createInterface } from 'node:readline/promises'
+import chalk from 'chalk';
 
 import config from '../libs/config.js'
 import inAppTransfer from './inAppTransfer.js'

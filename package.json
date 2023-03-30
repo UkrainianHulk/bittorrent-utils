@@ -7,8 +7,8 @@
   "scripts": {
     "start": "npm install --omit=dev && node -e \"console.clear()\" && cross-env NODE_ENV=user ts-node index.ts",
     "start:manual-transfer": "npm install --omit=dev && node -e \"console.clear()\" && cross-env NODE_ENV=user ts-node ./src/modules/manualTransfer.ts",
-    "dev": "cross-env NODE_ENV=dev nodemon --esm index.ts",
-    "dev:manual-transfer": "cross-env NODE_ENV=dev nodemon --esm ./src/modules/manualTransfer.ts",
+    "dev": "cross-env NODE_ENV=dev nodemon index.ts",
+    "dev:manual-transfer": "cross-env NODE_ENV=dev nodemon ./src/modules/manualTransfer.ts",
     "lint": "eslint --ext .ts . && prettier .",
     "lint:fix": "eslint --fix --ext .ts . && prettier --write .",
     "generate-ledger-proto-types": "npx proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --keepCase --grpcLib=@grpc/grpc-js --outDir=src/services/ledger/protos-types/ledger src/services/ledger/protos/ledger.proto"
@@ -34,7 +34,7 @@
     "@types/keccak": "^3.0.1",
     "@types/secp256k1": "^4.0.3",
     "bs58": "^5.0.0",
-    "colors": "^1.4.0",
+    "chalk": "^5.2.0",
     "cross-env": "^7.0.3",
     "deepmerge": "^4.3.1",
     "find-process": "^1.4.7",
