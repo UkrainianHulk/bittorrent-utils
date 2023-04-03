@@ -34,7 +34,7 @@ export type TorrentData = [
   _unknown_: string // "1B1A1730"
 ];
 
-interface Torrent {
+export interface Torrent {
   hash: string;
   statusCode: number;
   name: string;
@@ -111,7 +111,7 @@ export type PeerData = [
   _unknown_: number // 0
 ];
 
-interface Peer {
+export interface Peer {
   torrentHash: string;
   region: string;
   ip: string;
