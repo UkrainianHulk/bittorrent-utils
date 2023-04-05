@@ -1,5 +1,5 @@
 import { loadPackageDefinition, credentials } from '@grpc/grpc-js';
-import type { ProtoGrpcType as LedgerGrpcType } from './protos-types/ledger/ledger.js';
+import type { ProtoGrpcType as LedgerGrpcType } from './protos-types/ledger.js';
 import protoLoader from '@grpc/proto-loader';
 import protobuf from 'protobufjs';
 import { PrivateKey, PublicKey } from '../../libs/keys.js';

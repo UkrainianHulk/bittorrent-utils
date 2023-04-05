@@ -8,7 +8,7 @@ const { AUTOCONFIG_SETTINGS } = config;
 
 const log = new Logger('autoconfig');
 
-async function autoConfig(): Promise<void> {      
+async function autoConfig(): Promise<void> {
   await bitTorrent.setSettings(AUTOCONFIG_SETTINGS);
   log.info('BitTorrent settings applied');
   await bitTorrentSpeed.disableTokensSpending();

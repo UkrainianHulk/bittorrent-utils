@@ -641,14 +641,11 @@ class BitTorrent {
     url.searchParams.set('action', 'getsettings');
     const data = await this.#authorizedRequest<SettingsResponseData>(url);
     const settingsEntries = data.settings.map((item) => [item[0], item[2]]);
-    const settings: Settings =
-      Object.fromEntries(settingsEntries);
+    const settings: Settings = Object.fromEntries(settingsEntries);
     return settings;
   }
 
-  async setSettings(
-    settings: Partial<Settings>
-  ): Promise<BuildResponseData> {
+  async setSettings(settings: Partial<Settings>): Promise<BuildResponseData> {
     const url = new URL(this.#guiUrl);
     url.searchParams.set('action', 'setsetting');
     Object.entries(settings).forEach(([option, value]) => {

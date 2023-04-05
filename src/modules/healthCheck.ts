@@ -40,7 +40,7 @@ async function reset(): Promise<void> {
 const healthCheck = (() => {
   let failedAttempts = 0;
 
-  return async function(): Promise<void> {
+  return async function (): Promise<void> {
     try {
       await Promise.all([
         bitTorrentClient.healthCheck(),
@@ -56,7 +56,7 @@ const healthCheck = (() => {
       }
       throw error;
     }
-  }
+  };
 })();
 
 export async function start(): Promise<void> {
