@@ -547,7 +547,7 @@ class BitTorrent {
     const responseText = responseBody.replace(/^\s+|\s+$/g, '');
     if (response.status !== 200)
       throw new Error(
-        `${response.status} ${response.statusText}: ${responseText}`
+        `${response.status} ${response.statusText}: ${responseText} (${url.href})`
       );
 
     const token = responseBody.match(/(?<=>)\S+?(?=<)/)?.[0];
@@ -581,7 +581,7 @@ class BitTorrent {
       this.resetAuth();
       const responseText = (await response.text()).replace(/^\s+|\s+$/g, '');
       throw new Error(
-        `${response.status} ${response.statusText}: ${responseText}`
+        `${response.status} ${response.statusText}: ${responseText} (${url.href})`
       );
     }
     return await response.json();

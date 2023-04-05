@@ -43,7 +43,7 @@ class BitTorrentSpeed {
     if (this.#token !== undefined) return this.#token;
     const url = new URL('token', await this.#getUrl());
     const response = await fetch(url.href);
-    if (response.status !== 200) throw new Error(response.statusText);
+    if (response.status !== 200) throw new Error(`${response.statusText} (${url.href})`);
     this.#token = await response.text();
     return this.#token;
   }
@@ -56,7 +56,7 @@ class BitTorrentSpeed {
     if (response.status !== 200) {
       const responseText = (await response.text()).replace(/^\s+|\s+$/g, '');
       throw new Error(
-        `${response.status} ${response.statusText}: ${responseText}`
+        `${response.status} ${response.statusText}: ${responseText} (${url.href})`
       );
     }
     return await response.text();
