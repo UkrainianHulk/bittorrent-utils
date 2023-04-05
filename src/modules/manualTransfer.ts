@@ -17,32 +17,34 @@ const rl = createInterface({
 const { DEV_FEE_PERCENT } = config
 const devFeePercent = numberToPercent(DEV_FEE_PERCENT)
 
-const askPayer = async () => {
+const askPayer = async (): Promise<PrivateKey> => {
   const privateKey = await rl.question(`Enter payer's SPEED private key:\n`)
   try {
     return new PrivateKey(privateKey)
   } catch (error) {
-    console.error(error.message.brightRed)
-    return await askPayer()
+    if (error instanceof Error)
+      console.log(chalk.redBright(error.message));
+    return await askPayer();
   }
 }
 
-const askRecipient = async () => {
+const askRecipient = async (): Promise<PublicKey> => {
   const publicKey = await rl.question(`Enter recipient's SPEED public key:\n`)
   try {
     return new PublicKey(publicKey)
   } catch (error) {
-    console.error(error.message.brightRed)
-    return await askRecipient()
+    if (error instanceof Error)
+      console.log(chalk.redBright(error.message));
+    return await askRecipient();
   }
 }
 
-const askAmount = async (balance) => {
+const askAmount = async (balance: number): Promise<number> => {
   const amount = await rl.question(`Enter BTTC amount:\n`)
   const isAmountCorrect = /^\d+([,.]\d{1,6})?$/.test(amount)
 
-  if (isAmountCorrect === false) {
-    console.error('Enter correct amount'.brightRed)
+  if (!isAmountCorrect) {
+    console.error(chalk.redBright('Enter correct amount'))
     return await askAmount(balance)
   }
 
