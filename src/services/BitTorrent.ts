@@ -543,13 +543,13 @@ class BitTorrent {
     const response = await fetch(url.href, {
       headers: { Authorization: this.#authHeader },
     });
-    const responseText = (await response.text()).replace(/^\s+|\s+$/g, '');
+    const responseBody = await response.text();
+    const responseText = responseBody.replace(/^\s+|\s+$/g, '');
     if (response.status !== 200)
       throw new Error(
         `${response.status} ${response.statusText}: ${responseText}`
       );
 
-    const responseBody = await response.text();
     const token = responseBody.match(/(?<=>)\S+?(?=<)/)?.[0];
     const guid = response.headers
       .get('set-cookie')
