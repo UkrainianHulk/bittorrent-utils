@@ -46,7 +46,7 @@ export default {
   AUTOCONFIG_ENABLED: false,
   AUTOCONFIG_DISABLE_TOKENS_SPENDING: true,
   AUTOCONFIG_SETTINGS: {
-    bind_port: '8080',
+    bind_port: '0',
     'bt.allow_same_ip': 'false',
     'bt.connect_speed': '100',
     'bt.graceful_shutdown': 'true',
