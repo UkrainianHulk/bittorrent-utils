@@ -20,7 +20,7 @@ Community - [Telegram](https://t.me/bittorrent_utils)
 
 ![Script console output sample](screenshots/0.png?raw=true)
 
-## Quick Start
+## Quick start
 
 ### Windows
 
