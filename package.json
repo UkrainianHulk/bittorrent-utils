@@ -1,6 +1,6 @@
 {
   "name": "bittorrent-utils",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "",
   "main": "index.ts",
   "type": "module",
@@ -14,7 +14,7 @@
     "generate-ledger-proto-types": "npx proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --keepCase --grpcLib=@grpc/grpc-js --outDir=src/services/ledger/protos-types/ src/services/ledger/protos/ledger.proto"
   },
   "keywords": [],
-  "author": "",
+  "author": "UkrainianHulk",
   "license": "ISC",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.57.0",
