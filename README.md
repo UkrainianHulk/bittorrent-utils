@@ -109,4 +109,4 @@ The script provides two config files:
 
 ## [License](https://github.com/UkrainianHulk/bittorrent-utils/blob/main/LICENSE)
 
-Copyright © 2021 - 2022 Yaroslav Sorochan
+Copyright © 2021 - 2023 Yaroslav Sorochan
