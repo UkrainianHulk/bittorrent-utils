@@ -1,7 +1,6 @@
 # BitTorrent Utilities
 
 Convenient and safe assistant for BTTС farming </br>
-Community - [Telegram](https://t.me/bittorrent_utils)
 
 ## Quick overview
 
@@ -96,16 +95,6 @@ The script provides two config files:
 ## Useful links
 
 - TRON fees calculator: <https://tronstation.io/calculator>
-
-## Support
-
-- You can ask for help or discuss the application in our community group in [Telegram](https://t.me/bittorrent_utils)
-- If you found a bug, please open a [new issue](https://github.com/UkrainianHulk/bittorrent-utils/issues/new)
-
-## Donations
-
-- BTTC/TRX/USDT (TRX20) TTijwYsndktUJbCHuW5oNPBWoWrJ5RV1iW
-- BTTC (in-app) BHGaoDov6gsuHbfk2Tc0cAyHABw3hoKS2Cv1uBpA+/nVc1JikV6IxqEZ/5NlizPGFpvMtONMyBeJcXOIb4Jdnjk=
 
 ## [License](https://github.com/UkrainianHulk/bittorrent-utils/blob/main/LICENSE)
 
