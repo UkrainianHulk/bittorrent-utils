@@ -19,7 +19,7 @@ const logLevel =
 log.setDefaultLevel(logLevel);
 
 const timestamp = (): string => {
-  const dateStr = new Date().toLocaleString('ru', {
+  const dateStr = new Date().toLocaleString('uk-UA', {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
@@ -28,30 +28,26 @@ const timestamp = (): string => {
   return chalk.yellow(dateStr);
 };
 
-export default class Logger {
-  #name;
+export class Logger {
+  constructor(private readonly name: string = 'other') {}
 
-  constructor(name = 'other') {
-    this.#name = name;
-  }
-
-  trace = (msg: string): void => {
-    log.trace(timestamp(), chalk.gray('TRACE'), `[${this.#name}]`, msg);
+  trace = (...msgs: unknown[]): void => {
+    log.trace(timestamp(), chalk.gray('TRACE'), `[${this.name}]`, ...msgs);
   };
 
-  debug = (msg: string): void => {
-    log.debug(timestamp(), chalk.gray('DEBUG'), `[${this.#name}]`, msg);
+  debug = (...msgs: unknown[]): void => {
+    log.debug(timestamp(), chalk.gray('DEBUG'), `[${this.name}]`, ...msgs);
   };
 
-  info = (msg: string): void => {
-    log.info(timestamp(), chalk.blue('INFO'), `[${this.#name}]`, msg);
+  info = (...msgs: unknown[]): void => {
+    log.info(timestamp(), chalk.blue('INFO'), `[${this.name}]`, ...msgs);
   };
 
-  warn = (msg: string): void => {
-    log.warn(timestamp(), chalk.yellow('WARN'), `[${this.#name}]`, msg);
+  warn = (...msgs: unknown[]): void => {
+    log.warn(timestamp(), chalk.yellow('WARN'), `[${this.name}]`, ...msgs);
   };
 
-  error = (msg: string): void => {
-    log.error(timestamp(), chalk.red('ERROR'), `[${this.#name}]`, msg);
+  error = (...msgs: unknown[]): void => {
+    log.error(timestamp(), chalk.red('ERROR'), `[${this.name}]`, ...msgs);
   };
 }
