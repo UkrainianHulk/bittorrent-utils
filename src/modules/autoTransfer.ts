@@ -1,6 +1,6 @@
 import { setTimeout } from 'node:timers/promises';
 import chalk from 'chalk';
-import Logger from '../libs/Logger.js';
+import { Logger } from '../libs/Logger.js';
 import config from '../libs/config.js';
 import bitTorrentSpeed from '../services/bitTorrentSpeedClient.js';
 import inAppTransfer from './inAppTransfer.js';

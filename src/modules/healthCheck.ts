@@ -4,7 +4,7 @@ import process from 'node:process';
 import { execFile } from 'node:child_process';
 import { setTimeout } from 'timers/promises';
 import findProcess from 'find-process';
-import Logger from '../libs/Logger.js';
+import { Logger } from '../libs/Logger.js';
 import config from '../libs/config.js';
 import bitTorrentClient from '../services/bitTorrentClient.js';
 import bitTorrentSpeedClient from '../services/bitTorrentSpeedClient.js';

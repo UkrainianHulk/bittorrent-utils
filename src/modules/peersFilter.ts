@@ -1,7 +1,7 @@
 import { setTimeout } from 'node:timers/promises';
 import semver from 'semver';
 import config from '../libs/config.js';
-import Logger from '../libs/Logger.js';
+import { Logger } from '../libs/Logger.js';
 import bitTorrent from '../services/bitTorrentClient.js';
 import type { Peer, Torrent } from '../services/BitTorrent.js';
 

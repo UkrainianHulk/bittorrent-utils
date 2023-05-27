@@ -2,7 +2,7 @@ import { setTimeout } from 'node:timers/promises';
 import config from '../libs/config.js';
 import bitTorrent from '../services/bitTorrentClient.js';
 import { msToDHMS, bytesToGB, GBtoBytes, cropString } from '../libs/utils.js';
-import Logger from '../libs/Logger.js';
+import { Logger } from '../libs/Logger.js';
 import { type Torrent } from '../services/BitTorrent.js';
 
 const {
