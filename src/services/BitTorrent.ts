@@ -501,12 +501,12 @@ interface SettingsResponseData extends BuildResponseData {
 }
 
 class BitTorrent {
-  #guiPassword: string;
-  #guiUrl: string;
-  #guiUsername: string;
-  #ipFilterFilePath: string;
-  #token: string | undefined;
-  #guid: string | undefined;
+  private guiPassword: string;
+  private guiUrl: string;
+  private guiUsername: string;
+  private ipFilterFilePath: string;
+  private token: string | undefined;
+  private guid: string | undefined;
 
   constructor({
     guiUrl,
@@ -519,29 +519,29 @@ class BitTorrent {
     guiPassword: string;
     installationPath: string;
   }) {
-    this.#guiUrl = guiUrl;
-    this.#guiUsername = guiUsername;
-    this.#guiPassword = guiPassword;
-    this.#ipFilterFilePath = path.join(installationPath, 'ipfilter.dat');
+    this.guiUrl = guiUrl;
+    this.guiUsername = guiUsername;
+    this.guiPassword = guiPassword;
+    this.ipFilterFilePath = path.join(installationPath, 'ipfilter.dat');
   }
 
-  get #authHeader(): string {
-    const cred = Buffer.from(this.#guiUsername + ':' + this.#guiPassword);
+  private get authHeader(): string {
+    const cred = Buffer.from(this.guiUsername + ':' + this.guiPassword);
     const authString = 'Basic ' + cred.toString('base64');
     return authString;
   }
 
-  async #authorize(): Promise<{ token: string; guid: string }> {
-    if (this.#token !== undefined && this.#guid !== undefined)
+  private async authorize(): Promise<{ token: string; guid: string }> {
+    if (this.token !== undefined && this.guid !== undefined)
       return {
-        token: this.#token,
-        guid: this.#guid,
+        token: this.token,
+        guid: this.guid,
       };
 
-    const url = new URL('token.html', this.#guiUrl);
+    const url = new URL('token.html', this.guiUrl);
 
     const response = await fetch(url.href, {
-      headers: { Authorization: this.#authHeader },
+      headers: { Authorization: this.authHeader },
     });
     const responseBody = await response.text();
     const responseText = responseBody.replace(/^\s+|\s+$/g, '');
@@ -557,23 +557,25 @@ class BitTorrent {
     if (token === undefined || guid === undefined)
       throw new Error('Failed to obtain credentials');
 
-    this.#token = token;
-    this.#guid = guid;
+    this.token = token;
+    this.guid = guid;
 
     return { token, guid };
   }
 
   resetAuth(): void {
-    this.#token = undefined;
-    this.#guid = undefined;
+    this.token = undefined;
+    this.guid = undefined;
   }
 
-  async #authorizedRequest<ResponseType>(url: URL): Promise<ResponseType> {
-    const { token, guid } = await this.#authorize();
+  private async authorizedRequest<ResponseType>(
+    url: URL
+  ): Promise<ResponseType> {
+    const { token, guid } = await this.authorize();
     url.searchParams.set('token', token);
     const response = await fetch(url.href, {
       headers: {
-        Authorization: this.#authHeader,
+        Authorization: this.authHeader,
         Cookie: `GUID=${guid}`,
       },
     });
@@ -588,9 +590,9 @@ class BitTorrent {
   }
 
   async getTorrents(): Promise<Torrent[]> {
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('list', '1');
-    const data = await this.#authorizedRequest<TorrentsResponseData>(url);
+    const data = await this.authorizedRequest<TorrentsResponseData>(url);
     if (data.torrents === undefined) return [];
     return data.torrents.map(makeTorrent);
   }
@@ -599,10 +601,10 @@ class BitTorrent {
     if (!Array.isArray(hashes)) hashes = [hashes];
     if (hashes.length === 0) return [];
 
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('action', 'getpeers');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    const data = await this.#authorizedRequest<PeersResponseData>(url);
+    const data = await this.authorizedRequest<PeersResponseData>(url);
     if (data.peers === undefined) return [];
 
     const peers = data.peers.reduce<Peer[]>((acc, item, index, list) => {
@@ -618,10 +620,10 @@ class BitTorrent {
 
   async stopTorrents(hashes: string | string[]): Promise<BuildResponseData> {
     if (!Array.isArray(hashes)) hashes = [hashes];
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('action', 'stop');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    return await this.#authorizedRequest<BuildResponseData>(url);
+    return await this.authorizedRequest<BuildResponseData>(url);
   }
 
   async deleteTorrents(
@@ -629,37 +631,37 @@ class BitTorrent {
     deleteFiles = true
   ): Promise<BuildResponseData> {
     if (!Array.isArray(hashes)) hashes = [hashes];
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     if (deleteFiles) url.searchParams.set('action', 'removedata');
     else url.searchParams.set('action', 'remove');
     for (const hash of hashes) url.searchParams.append('hash', hash);
-    return await this.#authorizedRequest<BuildResponseData>(url);
+    return await this.authorizedRequest<BuildResponseData>(url);
   }
 
   async getSettings(): Promise<Settings> {
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('action', 'getsettings');
-    const data = await this.#authorizedRequest<SettingsResponseData>(url);
+    const data = await this.authorizedRequest<SettingsResponseData>(url);
     const settingsEntries = data.settings.map((item) => [item[0], item[2]]);
     const settings: Settings = Object.fromEntries(settingsEntries);
     return settings;
   }
 
   async setSettings(settings: Partial<Settings>): Promise<BuildResponseData> {
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('action', 'setsetting');
     Object.entries(settings).forEach(([option, value]) => {
       url.searchParams.append('s', option);
       url.searchParams.append('v', value);
     });
-    return await this.#authorizedRequest<BuildResponseData>(url);
+    return await this.authorizedRequest<BuildResponseData>(url);
   }
 
   async addUrl(link: string): Promise<BuildResponseData> {
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     url.searchParams.set('action', 'add-url');
     url.searchParams.append('s', link);
-    return await this.#authorizedRequest<BuildResponseData>(url);
+    return await this.authorizedRequest<BuildResponseData>(url);
   }
 
   async reloadIpFilter(): Promise<void> {
@@ -669,15 +671,15 @@ class BitTorrent {
 
   async addToIpsFilter(ips: string | string[]): Promise<void> {
     if (!Array.isArray(ips)) ips = [ips];
-    await fs.appendFile(this.#ipFilterFilePath, ips.join('\n') + '\n');
+    await fs.appendFile(this.ipFilterFilePath, ips.join('\n') + '\n');
   }
 
   async resetIpFilter(): Promise<void> {
-    await fs.writeFile(this.#ipFilterFilePath, '');
+    await fs.writeFile(this.ipFilterFilePath, '');
   }
 
   async healthCheck(): Promise<void> {
-    const url = new URL(this.#guiUrl);
+    const url = new URL(this.guiUrl);
     await fetch(url.href);
   }
 }
