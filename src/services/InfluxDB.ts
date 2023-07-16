@@ -1,8 +1,8 @@
 import { InfluxDB, Point, type WriteApi } from '@influxdata/influxdb-client';
 
 class InfluxDBClass {
-  #client: InfluxDB;
-  #writeApi: WriteApi;
+  private client: InfluxDB;
+  private writeApi: WriteApi;
 
   constructor({
     url,
@@ -15,8 +15,8 @@ class InfluxDBClass {
     org: string;
     bucket: string;
   }) {
-    this.#client = new InfluxDB({ url, token });
-    this.#writeApi = this.#client.getWriteApi(org, bucket);
+    this.client = new InfluxDB({ url, token });
+    this.writeApi = this.client.getWriteApi(org, bucket);
   }
 
   async pushTransferData({
@@ -37,8 +37,8 @@ class InfluxDBClass {
       .floatField('amount', amount)
       .timestamp(new Date());
 
-    this.#writeApi.writePoint(point);
-    await this.#writeApi.flush();
+    this.writeApi.writePoint(point);
+    await this.writeApi.flush();
   }
 }
 

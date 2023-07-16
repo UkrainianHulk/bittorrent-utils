@@ -50,7 +50,7 @@ export function getLocalIp(): string {
 }
 
 export async function untilSuccess(
-  func: () => Promise<any>,
+  func: () => Promise<unknown>,
   logger: typeof log,
   delay = 5000
 ): Promise<ReturnType<typeof func>> {
